@@ -1,0 +1,16 @@
+# robots.txt for yourdomain.com
+# Allow all crawlers, point to sitemap
+
+User-agent: *
+Allow: /
+
+# Sitemap location (update domain before going live)
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Crawl-delay (polite crawling, in seconds)
+Crawl-delay: 10
+
+# Disallow private/admin areas (uncomment and adjust as needed)
+# Disallow: /admin/
+# Disallow: /private/
+# Disallow: /cgi-bin/
