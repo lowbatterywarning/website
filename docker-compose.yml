@@ -1,0 +1,31 @@
+services:
+  zamfara-web:
+    build: .
+    image: zamfara-web:latest
+    container_name: zamfara-web
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      # Public HTTPS port, used by the redirection middleware to build
+      # https:// URLs even though the container itself listens on plain HTTP.
+      ASPNETCORE_HTTPS_PORT: "443"
+      # Enable ONLY when a reverse proxy (nginx/Caddy/Traefik) terminates TLS in
+      # front of this container and forwards X-Forwarded-* headers. Required for
+      # the built-in HTTPS redirection/HSTS to see the real scheme. When this is
+      # enabled, the app must not be reachable directly by attackers (restrict
+      # source IPs at the firewall/proxy level), because X-Forwarded-Proto:
+      # https from a random peer would defeat the HTTP->HTTPS redirect.
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      # Override AllowedHosts with your real public domain(s) if you access the
+      # site under anything other than zamfara.org / *.zamfara.org:
+      # AllowedHosts: "zamfara.org;www.zamfara.org;school-one.zamfara.org"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

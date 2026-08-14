@@ -78,14 +78,67 @@ need real values:
 
 - **Allowed hosts**: `localhost`, loopback, `zamfara.org` and `*.zamfara.org`
   only (in [`appsettings.json`](Zamfara.Web/appsettings.json)) — edit
-  `AllowedHosts` to add real domains.
+  `AllowedHosts` to add real domains. Override at runtime with the
+  `AllowedHosts` environment variable if needed.
 - **Security headers** on every response: `X-Content-Type-Options: nosniff`,
-  `X-Frame-Options: DENY`, and a strict `Referrer-Policy`.
+  `X-Frame-Options: DENY`, a strict `Referrer-Policy`, a minimal
+  `Permissions-Policy`, and a `Content-Security-Policy` that only allows
+  self-hosted scripts/styles, `data:` favicons, and blocks framing, embedding,
+  and form submission entirely (matches the info-only site).
+- **No `Server` header** — Kestrel is configured not to advertise itself.
+- **GET/HEAD only** — every other HTTP verb (TRACE, PUT, POST, DELETE,
+  OPTIONS, …) gets an immediate `405 Method Not Allowed`; the site is purely
+  informational.
 - **Production only** (i.e. not in the `Development` environment): friendly
-  exception handler at `/Home/Error`, HSTS, and HTTPS redirection.
+  exception handler at `/Home/Error` (no exception details are ever rendered),
+  HSTS (365 days, subdomains included), and HTTPS redirection.
+- **`/healthz`** — no-detail health probe for uptime monitors and Docker
+  `HEALTHCHECK`; reachable over plain HTTP even in Production.
+- **CSRF**: `AutoValidateAntiforgeryToken` is applied globally so any future
+  form action is protected by default.
+- **Behind a reverse proxy** (nginx/Caddy/Traefik terminating TLS), set
+  `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` so the HTTPS redirection sees the
+  real scheme and does not redirect-loop. Only enable this when the app is not
+  directly reachable by the public, since it trusts `X-Forwarded-*` headers
+  from the connecting peer.
 
 ## Build
 
 ```bash
 dotnet build Zamfara.sln
 ```
+
+## Running with Docker
+
+```bash
+docker build -t zamfara-web .
+docker run -d -p 8080:8080 --name zamfara-web zamfara-web
+# or with the compose file (read-only root fs, no capabilities, non-root user):
+docker compose up -d
+```
+
+Then open <http://localhost:8080> (through your TLS proxy in production). The
+container:
+
+- runs as the non-root `app` user (uid 1654);
+- listens on HTTP port 8080 only — terminate TLS at your reverse proxy or
+  load balancer and point it at 8080. The HTTPS port for redirects is assumed
+  to be 443 (`ASPNETCORE_HTTPS_PORT`) so plain-HTTP requests get a proper
+  `https://` redirect;
+- has a built-in `HEALTHCHECK` against `/healthz`;
+- sets `ASPNETCORE_ENVIRONMENT=Production`, so HSTS, HTTPS redirection and the
+  error page are active.
+
+Public-deployment notes:
+
+- `AllowedHosts` already includes `zamfara.org` and `*.zamfara.org`; if you
+  serve the site under other domains, pass `AllowedHosts: "your.domain;…"`
+  via the environment.
+- If (and only if) TLS is terminated by a proxy in front of the container,
+  enable `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` — the compose file already
+  does this. Without a proxy, leave it off so spoofed `X-Forwarded-*` headers
+  are ignored. When it is on, restrict direct access to the container port at
+  the firewall level so only your proxy can send it requests.
+- The compose file uses `read_only: true`, `no-new-privileges:true`,
+  `cap_drop: ALL`, and a `/tmp` tmpfs; keep these unless you have a concrete
+  reason to relax them.
