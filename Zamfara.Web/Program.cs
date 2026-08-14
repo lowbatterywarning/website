@@ -16,6 +16,22 @@ builder.Services.AddRouting(options =>
 
 var app = builder.Build();
 
+// Security headers on every response: informational site, no framing or MIME sniffing.
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    await next();
+});
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+    app.UseHttpsRedirection();
+}
+
 // 301-redirect the legacy static URLs to their School One equivalents.
 // (?i) + optional trailing slash so /Index.html and /about.html/ redirect too.
 app.UseRewriter(new RewriteOptions()

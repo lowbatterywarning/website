@@ -34,70 +34,22 @@
     </div>
   </section>
 
-  <!-- ==================== FORM + MAP ==================== -->
+  <!-- ==================== CONTACT INFO + MAP ==================== -->
   <section class="section" style="background:#F4F5F7;">
     <div class="container">
 
       <div class="about-teaser">
-        <!-- Contact Form -->
+        <!-- Contact info (informational only — no form submissions yet) -->
         <div>
-          <h2>Send Us a Message</h2>
+          <h2>Get in Touch</h2>
           <p>Whether you're a prospective family, a current parent, or a community member, we'd love to hear from you.</p>
-
-          <!--
-            FORMSPREE SETUP (2-minute, no-cost):
-            1. Go to https://formspree.io and create a free account
-            2. Click "New Form", copy your unique form ID (looks like: xxxxxxxxx)
-            3. Replace YOUR_FORM_ID in the action URL below:
-               action="https://formspree.io/f/YOUR_FORM_ID"
-            4. That's it — submissions will forward to the email you registered with
-
-            TRADEOFF vs PHP mail():
-            - Formspree: no server code, reliable delivery, spam filtering,
-              works with static .html. Free tier = 50 submissions/month.
-            - PHP mail(): self-hosted, no limits, but often flagged as spam,
-              requires renaming page to .php, needs careful header config.
-          -->
-
-          <form class="contact-form mt-3"
-                action="https://formspree.io/f/YOUR_FORM_ID"
-                method="POST"
-                id="contactForm"
-                novalidate>
-
-            <!-- Success / error message container (hidden by default) -->
-            <div class="form-message" id="formMessage" role="alert"></div>
-
-            <label for="name">Full Name *</label>
-            <input type="text" id="name" name="name" placeholder="Your full name" required autocomplete="name">
-
-            <label for="email">Email Address *</label>
-            <input type="email" id="email" name="email" placeholder="your@@email.com" required autocomplete="email">
-
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel">
-
-            <label for="topic">I'm interested in...</label>
-            <select id="topic" name="topic">
-              <option value="">— Please select —</option>
-              <option value="Admissions & Visiting Campus">Admissions & Visiting Campus</option>
-              <option value="Academics & Curriculum">Academics & Curriculum</option>
-              <option value="Athletics & Extracurriculars">Athletics & Extracurriculars</option>
-              <option value="General Inquiry">General Inquiry</option>
-              <option value="Other">Other</option>
-            </select>
-
-            <label for="message">Message *</label>
-            <textarea id="message" name="message" placeholder="How can we help you?" required></textarea>
-
-            <!-- Honeypot: invisible to humans, catches bots -->
-            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-
-            <!-- Custom subject line for received emails -->
-            <input type="hidden" name="_subject" value="New message from @Model.Site.Name website">
-
-            <button type="submit" class="btn btn-primary" id="formSubmitBtn">Send Message</button>
-          </form>
+          <ul style="font-size:0.9rem; line-height:2; list-style:none; padding-left:0;">
+            <li><strong>Phone:</strong> (555) 123-4567</li>
+            <li><strong>Admissions:</strong> (555) 123-4568</li>
+            <li><strong>Email:</strong> info@@school.edu</li>
+            <li><strong>Address:</strong> 123 Education Lane, Your City, ST 12345</li>
+          </ul>
+          <p style="font-size:0.9rem;">Office hours: Monday – Friday, 8:00 AM – 4:00 PM.</p>
         </div>
 
         <!-- Map Placeholder -->

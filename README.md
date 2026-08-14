@@ -60,19 +60,29 @@ This is a structural port, not a redesign — the original design, CSS and
 markup are preserved. Items carried over from the original site that still
 need real values:
 
-- **Contact form** posts to a Formspree placeholder
-  (`https://formspree.io/f/YOUR_FORM_ID`); replace `YOUR_FORM_ID` with a real
-  Formspree form ID. The AJAX submit handler is in `wwwroot/js/main.js`.
+- **Contact page is informational only** — there is no form and nothing
+  sends email yet; it shows contact details so visitors can reach the school
+  by phone, email, or in person.
 - **Contact details** are placeholders (`[Your City]`, `(555) 123-4567`,
   `info@school.edu`, social `href="#"`).
 - **`[IMAGE: …]` comments** mark where real photos go; the referenced image
   files were never present in the original site.
 - **Placeholder images** were generated (brand navy/gold) for
-  `images/favicon.ico`, `images/apple-touch-icon.png` and
+  `favicon.ico`, `images/apple-touch-icon.png` and
   `images/og-default.jpg` — replace with real artwork when available.
 - **Domain** is assumed to be `zamfara.org` in `robots.txt` and `sitemap.xml`.
 - **`js/main.js`** nav highlighting was patched to compare full URL paths so
   it works under the `/school-one/...` sub-route structure.
+
+## Security hardening
+
+- **Allowed hosts**: `localhost`, loopback, `zamfara.org` and `*.zamfara.org`
+  only (in [`appsettings.json`](Zamfara.Web/appsettings.json)) — edit
+  `AllowedHosts` to add real domains.
+- **Security headers** on every response: `X-Content-Type-Options: nosniff`,
+  `X-Frame-Options: DENY`, and a strict `Referrer-Policy`.
+- **Production only** (i.e. not in the `Development` environment): friendly
+  exception handler at `/Home/Error`, HSTS, and HTTPS redirection.
 
 ## Build
 
