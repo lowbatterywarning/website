@@ -1,0 +1,185 @@
+@model SchoolPageViewModel
+
+<main>
+
+
+  <!-- ==================== PAGE BANNER ==================== -->
+  <section class="page-banner">
+    <div class="container">
+      <h1>Our Staff & Faculty</h1>
+    </div>
+  </section>
+
+  <!-- ==================== LEADERSHIP TEAM ==================== -->
+  <section class="section">
+    <div class="container">
+
+      <h2 style="text-align:center;">Leadership Team</h2>
+      <p style="text-align:center; max-width:600px; margin:0 auto 2rem;">
+        Experienced educators and administrators dedicated to guiding @Model.Site.Name's mission and supporting every student's journey.
+      </p>
+
+      <div class="staff-grid">
+        <div class="staff-card">
+          <!-- [IMAGE: Dr. Jane Doe headshot — <img src="images/staff/jane-doe.jpg" alt="Dr. Jane Doe, Head of School" loading="lazy">] -->
+          <div class="staff-photo" role="img" aria-label="Photo of Dr. Jane Doe, Head of School">JD</div>
+          <h3>Dr. Jane Doe</h3>
+          <p class="role">Head of School</p>
+          <p style="font-size:0.8rem; color:#888;">Ed.D., Harvard University</p>
+          <p style="font-size:0.85rem;"><a href="mailto:jane.doe@@school.edu">jane.doe@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <!-- [IMAGE: John Smith headshot — <img src="images/staff/john-smith.jpg" alt="John Smith, Assistant Principal" loading="lazy">] -->
+          <div class="staff-photo" role="img" aria-label="Photo of John Smith, Assistant Principal">JS</div>
+          <h3>John Smith</h3>
+          <p class="role">Assistant Principal</p>
+          <p style="font-size:0.8rem; color:#888;">M.Ed., Stanford University</p>
+          <p style="font-size:0.85rem;"><a href="mailto:john.smith@@school.edu">john.smith@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <!-- [IMAGE: Maria Rodriguez headshot — <img src="images/staff/maria-rodriguez.jpg" alt="Maria Rodriguez, Academic Dean" loading="lazy">] -->
+          <div class="staff-photo" role="img" aria-label="Photo of Maria Rodriguez, Academic Dean">MR</div>
+          <h3>Maria Rodriguez</h3>
+          <p class="role">Academic Dean</p>
+          <p style="font-size:0.8rem; color:#888;">Ph.D., UC Berkeley</p>
+          <p style="font-size:0.85rem;"><a href="mailto:maria.rodriguez@@school.edu">maria.rodriguez@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <!-- [IMAGE: David Williams headshot — <img src="images/staff/david-williams.jpg" alt="David Williams, Director of Admissions" loading="lazy">] -->
+          <div class="staff-photo" role="img" aria-label="Photo of David Williams, Director of Admissions">DW</div>
+          <h3>David Williams</h3>
+          <p class="role">Director of Admissions</p>
+          <p style="font-size:0.8rem; color:#888;">M.A., Columbia University</p>
+          <p style="font-size:0.85rem;"><a href="mailto:david.williams@@school.edu">david.williams@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <!-- [IMAGE: Karen Lewis headshot — <img src="images/staff/karen-lewis.jpg" alt="Karen Lewis, Director of Student Services" loading="lazy">] -->
+          <div class="staff-photo" role="img" aria-label="Photo of Karen Lewis, Director of Student Services">KL</div>
+          <h3>Karen Lewis</h3>
+          <p class="role">Director of Student Services</p>
+          <p style="font-size:0.8rem; color:#888;">M.S.W., University of Michigan</p>
+          <p style="font-size:0.85rem;"><a href="mailto:karen.lewis@@school.edu">karen.lewis@@school.edu</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== DEPARTMENT HEADS ==================== -->
+  <section class="section" style="background:#F4F5F7;">
+    <div class="container">
+
+      <h2 style="text-align:center;">Department Chairs</h2>
+      <p style="text-align:center; max-width:600px; margin:0 auto 2rem;">
+        Department leaders who shape curriculum, mentor faculty, and ensure academic excellence across every discipline.
+      </p>
+
+      <div class="staff-grid">
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Sarah Bennett, English Department Chair">SB</div>
+          <h3>Sarah Bennett</h3>
+          <p class="role">English Department Chair</p>
+          <p style="font-size:0.85rem;"><a href="mailto:sarah.bennett@@school.edu">sarah.bennett@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Robert Chen, Mathematics Department Chair">RC</div>
+          <h3>Robert Chen</h3>
+          <p class="role">Mathematics Department Chair</p>
+          <p style="font-size:0.85rem;"><a href="mailto:robert.chen@@school.edu">robert.chen@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Lisa Thompson, Science & STEM Coordinator">LT</div>
+          <h3>Lisa Thompson</h3>
+          <p class="role">Science & STEM Coordinator</p>
+          <p style="font-size:0.85rem;"><a href="mailto:lisa.thompson@@school.edu">lisa.thompson@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Michael Patel, Social Studies Department Chair">MP</div>
+          <h3>Michael Patel</h3>
+          <p class="role">Social Studies Department Chair</p>
+          <p style="font-size:0.85rem;"><a href="mailto:michael.patel@@school.edu">michael.patel@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Angela Kim, Music & Performing Arts Chair">AK</div>
+          <h3>Angela Kim</h3>
+          <p class="role">Music & Performing Arts Chair</p>
+          <p style="font-size:0.85rem;"><a href="mailto:angela.kim@@school.edu">angela.kim@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Carlos Rivera, World Languages Chair">CR</div>
+          <h3>Carlos Rivera</h3>
+          <p class="role">World Languages Chair</p>
+          <p style="font-size:0.85rem;"><a href="mailto:carlos.rivera@@school.edu">carlos.rivera@@school.edu</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TEACHING FACULTY ==================== -->
+  <section class="section">
+    <div class="container">
+
+      <h2 style="text-align:center;">Teaching Faculty</h2>
+      <p style="text-align:center; max-width:600px; margin:0 auto 2rem;">
+        Passionate educators who bring subjects to life and mentor students inside and outside the classroom.
+      </p>
+
+      <div class="staff-grid">
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Emily Grant, Visual Arts Teacher">EG</div>
+          <h3>Emily Grant</h3>
+          <p class="role">Visual Arts, Upper School</p>
+          <p style="font-size:0.85rem;"><a href="mailto:emily.grant@@school.edu">emily.grant@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of James Turner, Physical Education Teacher">JT</div>
+          <h3>James Turner</h3>
+          <p class="role">Physical Education, K-12</p>
+          <p style="font-size:0.85rem;"><a href="mailto:james.turner@@school.edu">james.turner@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Nancy Howard, English Teacher">NH</div>
+          <h3>Nancy Howard</h3>
+          <p class="role">English, Middle School</p>
+          <p style="font-size:0.85rem;"><a href="mailto:nancy.howard@@school.edu">nancy.howard@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Paul Torres, Biology Teacher">PT</div>
+          <h3>Paul Torres</h3>
+          <p class="role">Biology & Environmental Science</p>
+          <p style="font-size:0.85rem;"><a href="mailto:paul.torres@@school.edu">paul.torres@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Rachel Brown, Grade 2 Lead Teacher">RB</div>
+          <h3>Rachel Brown</h3>
+          <p class="role">Grade 2 Lead Teacher</p>
+          <p style="font-size:0.85rem;"><a href="mailto:rachel.brown@@school.edu">rachel.brown@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Daniel Morrison, History Teacher">DM</div>
+          <h3>Daniel Morrison</h3>
+          <p class="role">History, Upper School</p>
+          <p style="font-size:0.85rem;"><a href="mailto:daniel.morrison@@school.edu">daniel.morrison@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Susan Lee, Computer Science Teacher">SL</div>
+          <h3>Susan Lee</h3>
+          <p class="role">Computer Science & Robotics</p>
+          <p style="font-size:0.85rem;"><a href="mailto:susan.lee@@school.edu">susan.lee@@school.edu</a></p>
+        </div>
+        <div class="staff-card">
+          <div class="staff-photo" role="img" aria-label="Photo of Thomas Foster, Grade 5 Lead Teacher">TF</div>
+          <h3>Thomas Foster</h3>
+          <p class="role">Grade 5 Lead Teacher</p>
+          <p style="font-size:0.85rem;"><a href="mailto:thomas.foster@@school.edu">thomas.foster@@school.edu</a></p>
+        </div>
+      </div>
+
+      <p style="text-align:center; margin-top:2rem;">
+        <em>Additional faculty in French, Mandarin, library sciences, and learning support complete our talented team of over 60 educators.</em>
+      </p>
+
+    </div>
+  </section>
+
+
+</main>

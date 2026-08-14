@@ -1,0 +1,45 @@
+@model IReadOnlyList<SchoolSite>
+@{
+    Layout = "_HomeLayout";
+}
+
+<main>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <div class="container">
+      <h1>Welcome to zamfara.org</h1>
+      <p>One home for three schools — each built on the same foundation of academic excellence and character development.</p>
+      <a asp-controller="School" asp-action="Index" asp-route-site="@Model[0].Slug" class="btn btn-gold">Visit School One</a>
+      <a href="#schools" class="btn btn-outline-light">Explore All Schools</a>
+    </div>
+  </section>
+
+  <!-- ==================== OUR SCHOOLS ==================== -->
+  <section class="section" id="schools">
+    <div class="container">
+      <h2 style="text-align:center;">Our Schools</h2>
+      <p style="text-align:center;max-width:600px;margin:0 auto 2.5rem;">Three campuses, one shared mission. Each school offers the full K-12 experience — academics, athletics, and the arts.</p>
+      <div class="highlight-grid">
+        @foreach (var school in Model)
+        {
+          <a asp-controller="School" asp-action="Index" asp-route-site="@school.Slug" class="highlight-card">
+            <span class="card-icon">&#x1F3EB;</span>
+            <h3>@school.Name</h3>
+            <p>A complete K-12 program with rigorous academics, championship athletics, and thriving arts.</p>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA BAND ==================== -->
+  <section class="cta-band">
+    <div class="container">
+      <h2>Ready to get started?</h2>
+      <p>Every school in our family shares the same admissions process. Pick a school above and begin your journey today.</p>
+      <a asp-controller="School" asp-action="Admissions" asp-route-site="@Model[0].Slug" class="btn btn-primary">Apply Now</a>
+    </div>
+  </section>
+
+</main>

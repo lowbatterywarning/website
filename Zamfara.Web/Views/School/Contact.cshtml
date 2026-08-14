@@ -1,0 +1,164 @@
+@model SchoolPageViewModel
+
+<main>
+
+
+  <!-- ==================== PAGE BANNER ==================== -->
+  <section class="page-banner">
+    <div class="container">
+      <h1>Contact Us</h1>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT CARDS ==================== -->
+  <section class="section">
+    <div class="container">
+
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="cc-icon">&#x1F4CD;</div>
+          <h4>Address</h4>
+          <p>123 Education Lane<br>Your City, ST 12345</p>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon">&#x1F4DE;</div>
+          <h4>Phone</h4>
+          <p>Main: (555) 123-4567<br>Admissions: (555) 123-4568</p>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon">&#x2709;&#xFE0F;</div>
+          <h4>Email</h4>
+          <p>General: info@@school.edu<br>Admissions: admissions@@school.edu</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FORM + MAP ==================== -->
+  <section class="section" style="background:#F4F5F7;">
+    <div class="container">
+
+      <div class="about-teaser">
+        <!-- Contact Form -->
+        <div>
+          <h2>Send Us a Message</h2>
+          <p>Whether you're a prospective family, a current parent, or a community member, we'd love to hear from you.</p>
+
+          <!--
+            FORMSPREE SETUP (2-minute, no-cost):
+            1. Go to https://formspree.io and create a free account
+            2. Click "New Form", copy your unique form ID (looks like: xxxxxxxxx)
+            3. Replace YOUR_FORM_ID in the action URL below:
+               action="https://formspree.io/f/YOUR_FORM_ID"
+            4. That's it — submissions will forward to the email you registered with
+
+            TRADEOFF vs PHP mail():
+            - Formspree: no server code, reliable delivery, spam filtering,
+              works with static .html. Free tier = 50 submissions/month.
+            - PHP mail(): self-hosted, no limits, but often flagged as spam,
+              requires renaming page to .php, needs careful header config.
+          -->
+
+          <form class="contact-form mt-3"
+                action="https://formspree.io/f/YOUR_FORM_ID"
+                method="POST"
+                id="contactForm"
+                novalidate>
+
+            <!-- Success / error message container (hidden by default) -->
+            <div class="form-message" id="formMessage" role="alert"></div>
+
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" placeholder="Your full name" required autocomplete="name">
+
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="your@@email.com" required autocomplete="email">
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel">
+
+            <label for="topic">I'm interested in...</label>
+            <select id="topic" name="topic">
+              <option value="">— Please select —</option>
+              <option value="Admissions & Visiting Campus">Admissions & Visiting Campus</option>
+              <option value="Academics & Curriculum">Academics & Curriculum</option>
+              <option value="Athletics & Extracurriculars">Athletics & Extracurriculars</option>
+              <option value="General Inquiry">General Inquiry</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <label for="message">Message *</label>
+            <textarea id="message" name="message" placeholder="How can we help you?" required></textarea>
+
+            <!-- Honeypot: invisible to humans, catches bots -->
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+            <!-- Custom subject line for received emails -->
+            <input type="hidden" name="_subject" value="New message from @Model.Site.Name website">
+
+            <button type="submit" class="btn btn-primary" id="formSubmitBtn">Send Message</button>
+          </form>
+        </div>
+
+        <!-- Map Placeholder -->
+        <div>
+          <h2>Find Us</h2>
+          <p>We're located in the heart of [Your City], easily accessible from major highways and public transit.</p>
+          <!-- [EMBED: Google Maps iframe — replace src with your actual map embed URL] -->
+          <div class="map-placeholder mt-3" role="img" aria-label="Map showing @Model.Site.Name location at 123 Education Lane">
+            Google Maps Embed<br>
+            <small style="display:block; margin-top:0.5rem;">Replace with &lt;iframe&gt; embed code</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== OFFICE HOURS & DIRECTIONS ==================== -->
+  <section class="section">
+    <div class="container content-layout">
+
+      <div>
+        <h2>Office Hours</h2>
+        <p>Our administrative offices are open year-round. Feel free to call or visit during the hours below.</p>
+
+        <table class="cal-table mt-3" style="min-width:auto;">
+          <thead>
+            <tr><th>Day</th><th>Hours</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Monday – Friday</td><td>8:00 AM – 4:00 PM</td></tr>
+            <tr><td>Saturday & Sunday</td><td>Closed</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="mt-4">Summer Hours (Jun – Jul)</h3>
+        <p>Monday – Thursday, 9:00 AM – 3:00 PM. Closed Fridays.</p>
+
+        <h3 class="mt-4">Holiday Closures</h3>
+        <p>The school office is closed on all major holidays. Please refer to the <a asp-controller="School" asp-action="Calendar" asp-route-site="@Model.Site.Slug">school calendar</a> for specific dates.</p>
+      </div>
+
+      <aside class="sidebar">
+        <h3>Driving Directions</h3>
+        <p style="font-size:0.9rem;"><strong>From Downtown:</strong> Take Main Street north for 3 miles, turn right on Education Lane. Campus is on the left.</p>
+        <p style="font-size:0.9rem;"><strong>From the Highway:</strong> Exit 24B, head east on Oak Avenue for 1.5 miles, turn left on Education Lane.</p>
+
+        <h3 class="mt-3">Parking</h3>
+        <p style="font-size:0.9rem;">Visitor parking is available in Lot A, directly in front of the Main Administration Building. Look for the "Welcome" sign.</p>
+
+        <h3 class="mt-3">Quick Contacts</h3>
+        <ul style="font-size:0.9rem;">
+          <li><strong>Admissions:</strong> (555) 123-4568</li>
+          <li><strong>Attendance:</strong> (555) 123-4569</li>
+          <li><strong>Business Office:</strong> (555) 123-4570</li>
+          <li><strong>Health Office:</strong> (555) 123-4571</li>
+        </ul>
+      </aside>
+
+    </div>
+  </section>
+
+
+</main>

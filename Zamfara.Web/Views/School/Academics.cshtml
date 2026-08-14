@@ -1,0 +1,120 @@
+@model SchoolPageViewModel
+
+<main>
+
+
+  <!-- ==================== PAGE BANNER ==================== -->
+  <section class="page-banner">
+    <div class="container">
+      <h1>Academics</h1>
+    </div>
+  </section>
+
+  <!-- ==================== CURRICULUM ==================== -->
+  <section class="section">
+    <div class="container content-layout">
+
+      <div>
+        <h2>Curriculum Overview</h2>
+        <p>
+          At @Model.Site.Name, our curriculum is designed to inspire curiosity, develop
+          critical thinking, and build a strong foundation for lifelong learning.
+          We follow a standards-aligned framework enhanced by project-based
+          learning, interdisciplinary studies, and real-world application.
+        </p>
+
+        <h2 class="mt-4">Grade Levels</h2>
+        <p>Each division is thoughtfully designed to meet the developmental needs of students at every stage.</p>
+
+        <div class="level-grid mt-3">
+          <div class="level-card">
+            <p class="level-grade">Grades K – 5</p>
+            <h3>Lower School</h3>
+            <p>Foundational skills in literacy, mathematics, science, and social studies are paired with art, music, Spanish, and physical education. Emphasis on social-emotional learning and building a love for school.</p>
+          </div>
+          <div class="level-card">
+            <p class="level-grade">Grades 6 – 8</p>
+            <h3>Middle School</h3>
+            <p>Students rotate through core subjects with specialist teachers while exploring electives: coding, world languages, band, visual arts, and design thinking. Advisory program supports the middle years transition.</p>
+          </div>
+          <div class="level-card">
+            <p class="level-grade">Grades 9 – 12</p>
+            <h3>Upper School</h3>
+            <p>College-preparatory program with 14 AP courses, honors tracks, dual-enrollment options, and a senior capstone research project. 100% of graduates are accepted to four-year universities.</p>
+          </div>
+        </div>
+
+        <h2 class="mt-5">Special Programs</h2>
+        <div class="programs-grid mt-3">
+          <div class="program-card">
+            <span class="prog-icon">&#x1F52C;</span>
+            <div><h4>STEM & Innovation</h4><p>Robotics, coding, engineering design, and a dedicated makerspace for hands-on creation.</p></div>
+          </div>
+          <div class="program-card">
+            <span class="prog-icon">&#x1F3A8;</span>
+            <div><h4>Visual & Performing Arts</h4><p>Studio art, theater, band, choir, and annual musical productions.</p></div>
+          </div>
+          <div class="program-card">
+            <span class="prog-icon">&#x1F30D;</span>
+            <div><h4>World Languages</h4><p>Spanish, French, and Mandarin starting in Lower School through AP level.</p></div>
+          </div>
+          <div class="program-card">
+            <span class="prog-icon">&#x1F3C3;</span>
+            <div><h4>Athletics</h4><p>12 varsity sports, intramural leagues, and a K-12 physical education curriculum.</p></div>
+          </div>
+          <div class="program-card">
+            <span class="prog-icon">&#x1F4BB;</span>
+            <div><h4>Technology Integration</h4><p>1:1 device program from Grade 3, digital literacy, and responsible tech use.</p></div>
+          </div>
+          <div class="program-card">
+            <span class="prog-icon">&#x2764;&#xFE0F;</span>
+            <div><h4>Service Learning</h4><p>Grade-level partnerships with local nonprofits and an annual all-school day of service.</p></div>
+          </div>
+        </div>
+
+        <h2 class="mt-5">Student Support</h2>
+        <p>
+          We meet every learner where they are. Our team includes learning
+          specialists, school counselors, a literacy coach, and a math
+          interventionist. Whether a student needs enrichment, accommodations,
+          or just a trusted adult to talk to, support is always available.
+        </p>
+        <p>
+          Our college counseling program begins in Grade 9 with individualized
+          guidance through course selection, standardized testing, essay writing,
+          and the application process.
+        </p>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h3>Academic Programs</h3>
+        <ul>
+          <li><a href="#">College Preparatory Track</a></li>
+          <li><a href="#">Advanced Placement (14 Courses)</a></li>
+          <li><a href="#">STEM Academy</a></li>
+          <li><a href="#">Visual & Performing Arts</a></li>
+          <li><a href="#">Athletics Program</a></li>
+          <li><a href="#">Service Learning</a></li>
+        </ul>
+        <h3 class="mt-3">Resources</h3>
+        <ul>
+          <li><a href="#">2026–2027 Course Catalog</a></li>
+          <li><a asp-controller="School" asp-action="Calendar" asp-route-site="@Model.Site.Slug">Academic Calendar</a></li>
+          <li><a href="#">School Library Portal</a></li>
+          <li><a href="#">Summer Reading Lists</a></li>
+        </ul>
+        <h3 class="mt-3">By the Numbers</h3>
+        <ul>
+          <li><strong>14</strong> AP Courses</li>
+          <li><strong>12:1</strong> Student-Teacher Ratio</li>
+          <li><strong>100%</strong> College Acceptance</li>
+          <li><strong>78%</strong> Faculty with Advanced Degrees</li>
+        </ul>
+      </aside>
+
+    </div>
+  </section>
+
+
+</main>
