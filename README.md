@@ -1,17 +1,22 @@
 # Zamfara Schools — ASP.NET Core MVC
 
 A port of the original static HTML school-template site into a single ASP.NET
-Core MVC project that serves:
+Core MVC project. It serves **one generic school site** at the site root:
 
-- **`/`** — the zamfara.org landing page linking out to three school sites
-- **`/school-one`, `/school-two`, `/school-three`** — three school sub-sites,
-  each a full copy of the original site's pages (Home, About, Academics,
-  Admissions, Staff, Calendar, Contact)
+| Route | Page |
+| --- | --- |
+| `/` | Home |
+| `/about` | About |
+| `/academics` | Academics |
+| `/admissions` | Admissions |
+| `/staff` | Staff |
+| `/calendar` | Calendar |
+| `/contact` | Contact |
 
-The three schools are identical by construction: they all render the same
-shared view set under [`Views/School/`](Zamfara.Web/Views/School), with the
-school name substituted from a registry in
-[`SchoolSites.cs`](Zamfara.Web/Models/SchoolSites.cs).
+The school name is the `[SCHOOL]` placeholder carried over from the original
+template — rebrand by changing one constant in
+[`School.cs`](Zamfara.Web/Models/School.cs) (see
+[Rebranding the school](#rebranding-the-school)).
 
 ## Prerequisites
 
@@ -36,23 +41,25 @@ dotnet Zamfara.Web/bin/Debug/net8.0/Zamfara.Web.dll
 
 | Path | Purpose |
 | --- | --- |
-| `Zamfara.Web/Program.cs` | Pipeline, `schoolSite` route constraint, legacy 301 rewrites |
-| `Zamfara.Web/Controllers/HomeController.cs` | zamfara.org landing page |
-| `Zamfara.Web/Controllers/SchoolController.cs` | `{site}` routes serving all three schools |
-| `Zamfara.Web/Models/SchoolSites.cs` | School registry + per-page head metadata (port of the original `<head>` sections) |
-| `Zamfara.Web/Views/Shared/_HomeLayout.cshtml` | Landing-page shell |
-| `Zamfara.Web/Views/Shared/_SchoolLayout.cshtml` | Ported school header/footer shell |
-| `Zamfara.Web/Views/School/*.cshtml` | The 7 school pages |
+| `Zamfara.Web/Program.cs` | Pipeline, literal route table, legacy 301 rewrites |
+| `Zamfara.Web/Controllers/HomeController.cs` | One action per page + error page |
+| `Zamfara.Web/Models/School.cs` | The `[SCHOOL]` name placeholder (single rebrand point) |
+| `Zamfara.Web/Models/SchoolPages.cs` | Per-page head metadata (port of the original `<head>` sections) |
+| `Zamfara.Web/Views/Shared/_Layout.cshtml` | Ported school header/footer shell |
+| `Zamfara.Web/Views/Home/*.cshtml` | The 7 school pages |
 | `Zamfara.Web/wwwroot/` | CSS, JS, images, robots.txt, sitemap.xml |
 | `legacy-static/` | Untouched snapshot of the original static site |
 
-Legacy URLs redirect (301): `index.html` → `/school-one/`,
-`about.html` → `/school-one/about`, etc.
+Legacy URLs redirect (301, case-insensitive, trailing slashes allowed):
+`index.html` → `/`, `about.html` → `/about`, `school-one` → `/`,
+`school-two/admissions` → `/admissions`, etc. Unknown legacy paths 404.
 
-## Adding or renaming schools
+## Rebranding the school
 
-Edit the `All` array in [`SchoolSites.cs`](Zamfara.Web/Models/SchoolSites.cs).
-Unknown slugs 404 automatically via the `schoolSite` route constraint.
+Change `School.Name` in [`School.cs`](Zamfara.Web/Models/School.cs) — every
+page, title, meta tag and nav item picks the new name up automatically. (The
+original template literally used `[SCHOOL]` as the school name, so that is the
+default until you set a real one.)
 
 ## Assumptions and known placeholders
 
@@ -72,7 +79,7 @@ need real values:
   `images/og-default.jpg` — replace with real artwork when available.
 - **Domain** is assumed to be `zamfara.org` in `robots.txt` and `sitemap.xml`.
 - **`js/main.js`** nav highlighting was patched to compare full URL paths so
-  it works under the `/school-one/...` sub-route structure.
+  it works under the MVC root-path structure.
 
 ## Security hardening
 

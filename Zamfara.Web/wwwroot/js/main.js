@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ---- Highlight current page in nav ----
-  // Compare full paths so sub-site routes (e.g. /school-one/about) match.
+  // Compare full paths so trailing slashes (e.g. /about/) still match.
   var currentPath = window.location.pathname.replace(/\/+$/, "");
   const navLinks = document.querySelectorAll(".main-nav a");
 

@@ -1,25 +1,13 @@
 namespace Zamfara.Web.Models;
 
 /// <summary>
-/// Registry of the three school sites plus per-page head metadata.
+/// Per-page &lt;head&gt; metadata, keyed by controller action name.
 /// The meta strings were ported verbatim from the original static HTML
 /// &lt;head&gt; sections ({0} = school display name).
 /// </summary>
-public static class SchoolSites
+public static class SchoolPages
 {
-    /// <summary>The three schools. Rename or add sites here.</summary>
-    public static readonly SchoolSite[] All =
-    {
-        new("school-one", "School One"),
-        new("school-two", "School Two"),
-        new("school-three", "School Three"),
-    };
-
-    public static SchoolSite? TryGet(string? slug) =>
-        All.FirstOrDefault(s => string.Equals(s.Slug, slug, StringComparison.OrdinalIgnoreCase));
-
-    /// <summary>Per-page head metadata, keyed by Razor view name.</summary>
-    public static readonly IReadOnlyDictionary<string, PageMeta> Pages =
+    private static readonly IReadOnlyDictionary<string, PageMeta> Templates =
         new Dictionary<string, PageMeta>
     {
         ["Index"] = new("{0} — Home", "{0} — Empowering students for a bright future. A leading institution dedicated to academic excellence and character development.", "{0} — Home", "Welcome to {0} — a leading K-12 institution dedicated to academic excellence, character development, and preparing students to thrive."),
@@ -30,4 +18,11 @@ public static class SchoolSites
         ["Calendar"] = new("Calendar — {0}", "{0} Calendar — Upcoming events, holidays, and important dates.", "{0} Academic Calendar 2026–2027", "View {0}'s full academic calendar for 2026–2027. Key dates, holidays, events, exam schedules, and important deadlines."),
         ["Contact"] = new("Contact — {0}", "Contact {0} — Get in touch with our admissions office, faculty, or administration.", "Contact {0} — Get in Touch", "Contact {0} — find our address, phone numbers, office hours, and send us a message. Schedule a campus visit today.")
     };
+
+    /// <summary>Formatted head metadata for a page; defensive fallback for unknown keys.</summary>
+    public static PageMeta Get(string page) =>
+        Templates.TryGetValue(page, out var meta)
+            ? meta.Format(School.Name)
+            : new PageMeta($"{School.Name} — {page}", $"{School.Name} school page.",
+                $"{School.Name} — {page}", $"Explore {School.Name} on zamfara.org.");
 }

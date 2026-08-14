@@ -1,4 +1,4 @@
-@model SchoolPageViewModel
+@model PageMeta
 
 <main>
 
@@ -185,8 +185,8 @@
 
         <h3 class="mt-3">Quick Links</h3>
         <ul>
-          <li><a asp-controller="School" asp-action="Admissions" asp-route-site="@Model.Site.Slug">Admissions Deadlines</a></li>
-          <li><a asp-controller="School" asp-action="Academics" asp-route-site="@Model.Site.Slug">Course Catalog</a></li>
+          <li><a asp-action="Admissions">Admissions Deadlines</a></li>
+          <li><a asp-action="Academics">Course Catalog</a></li>
           <li><a href="#">Athletics Schedule</a></li>
         </ul>
       </aside>

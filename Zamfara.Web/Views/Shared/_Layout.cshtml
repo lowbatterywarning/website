@@ -1,25 +1,26 @@
-@model IReadOnlyList<SchoolSite>
+@model PageMeta
 @{
     var origin = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    var pageUrl = $"{origin}{Context.Request.Path}";
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="zamfara.org — the home of three schools. Explore School One, School Two, and School Three.">
-  <title>zamfara.org</title>
+  <meta name="description" content="@Model.Description">
+  <title>@Model.Title</title>
   <!-- Open Graph / Social Sharing -->
-  <meta property="og:title" content="zamfara.org">
-  <meta property="og:description" content="One home for three schools — each built on the same foundation of academic excellence and character development.">
+  <meta property="og:title" content="@Model.OgTitle">
+  <meta property="og:description" content="@Model.OgDescription">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="@origin/">
+  <meta property="og:url" content="@pageUrl">
   <meta property="og:image" content="@origin/images/og-default.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Favicon (inline SVG — navy rounded square with gold "Z") -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B2A4A'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-family='Georgia,serif' font-weight='bold' font-size='60' fill='%23C9A84C'%3EZ%3C/text%3E%3C/svg%3E">
+  <!-- Favicon (inline SVG — navy rounded square with gold "S") -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B2A4A'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-family='Georgia,serif' font-weight='bold' font-size='60' fill='%23C9A84C'%3ES%3C/text%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="~/images/apple-touch-icon.png">
   <link rel="stylesheet" href="~/css/style.css">
 </head>
@@ -28,19 +29,21 @@
   <!-- ==================== HEADER ==================== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a asp-controller="Home" asp-action="Index" class="logo">
-        <span class="logo-icon">&#x1F393;</span> <span>zamfara.org</span>
+      <a asp-action="Index" class="logo">
+        <span class="logo-icon">&#x1F393;</span> <span>@School.Name</span>
       </a>
       <button class="hamburger" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
       <nav>
         <ul class="main-nav">
-          <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-          @foreach (var school in Model)
-          {
-            <li><a asp-controller="School" asp-action="Index" asp-route-site="@school.Slug">@school.Name</a></li>
-          }
+          <li><a asp-action="Index">Home</a></li>
+          <li><a asp-action="About">About</a></li>
+          <li><a asp-action="Academics">Academics</a></li>
+          <li><a asp-action="Admissions">Admissions</a></li>
+          <li><a asp-action="Staff">Staff</a></li>
+          <li><a asp-action="Calendar">Calendar</a></li>
+          <li><a asp-action="Contact">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -53,17 +56,9 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col">
-          <h3>zamfara.org</h3>
-          <p>A family of schools committed to academic<br>excellence and character development.</p>
-        </div>
-        <div class="footer-col">
-          <h3>Our Schools</h3>
-          <ul>
-            @foreach (var school in Model)
-            {
-              <li><a asp-controller="School" asp-action="Index" asp-route-site="@school.Slug">@school.Name</a></li>
-            }
-          </ul>
+          <h3>@School.Name</h3>
+          <p>123 Education Lane<br>Your City, ST 12345</p>
+          <p>Phone: (555) 123-4567<br>Email: info@@school.edu</p>
         </div>
         <div class="footer-col">
           <h3>Office Hours</h3>
@@ -71,6 +66,17 @@
             <li><span class="day">Mon – Fri</span> <span class="time">8:00 AM – 4:00 PM</span></li>
             <li><span class="day">Saturday</span> <span class="time">Closed</span></li>
             <li><span class="day">Sunday</span> <span class="time">Closed</span></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a asp-action="About">About Us</a></li>
+            <li><a asp-action="Academics">Academics</a></li>
+            <li><a asp-action="Admissions">Admissions</a></li>
+            <li><a asp-action="Staff">Staff</a></li>
+            <li><a asp-action="Calendar">Calendar</a></li>
+            <li><a asp-action="Contact">Contact</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -84,7 +90,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 zamfara.org. All rights reserved.</p>
+        <p>&copy; 2026 @School.Name. All rights reserved.</p>
       </div>
     </div>
   </footer>

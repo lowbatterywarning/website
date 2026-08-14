@@ -1,9 +1,9 @@
 using System.Net;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
-using Zamfara.Web.Routing;
 
 // Resolve the project directory (where wwwroot lives) even when the app is
 // launched from elsewhere, e.g. `dotnet bin/Debug/net8.0/Zamfara.Web.dll`
@@ -21,9 +21,6 @@ builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 // guarantees CSRF protection if forms are added later without explicit opt-in.
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
-
-builder.Services.AddRouting(options =>
-    options.ConstraintMap.Add("schoolSite", typeof(SchoolSiteConstraint)));
 
 // HSTS for 365 days (includes *.zamfara.org subdomains) once in production.
 builder.Services.Configure<HstsOptions>(options => options.MaxAge = TimeSpan.FromDays(365));
@@ -107,17 +104,63 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-// 301-redirect the legacy static URLs to their School One equivalents.
-// (?i) + optional trailing slash so /Index.html and /about.html/ redirect too.
+// 301-redirect legacy URLs to the single-site equivalents: the original static
+// .html paths and the retired /school-one|two|three areas. Targets are
+// canonicalized to lowercase without a trailing slash; unknown legacy paths are
+// left alone so routing answers 404.
 app.UseRewriter(new RewriteOptions()
-    .AddRedirect(@"(?i)^index\.html/?$", "/school-one/", 301)
-    .AddRedirect(@"(?i)^(about|academics|admissions|staff|calendar|contact)\.html/?$",
-        "/school-one/$1", 301));
+    .Add(context =>
+    {
+        var path = context.HttpContext.Request.Path.Value ?? string.Empty;
+        string? target = null;
+
+        var htmlMatch = Regex.Match(
+            path,
+            @"^/(?<page>index|about|academics|admissions|staff|calendar|contact)\.html/?$",
+            RegexOptions.IgnoreCase);
+        if (htmlMatch.Success)
+        {
+            target = htmlMatch.Groups["page"].Value.Equals("index", StringComparison.OrdinalIgnoreCase)
+                ? "/"
+                : "/" + htmlMatch.Groups["page"].Value.ToLowerInvariant();
+        }
+        else
+        {
+            var schoolMatch = Regex.Match(
+                path,
+                @"^/school-(one|two|three)(?:/(?<page>about|academics|admissions|staff|calendar|contact))?/?$",
+                RegexOptions.IgnoreCase);
+            if (schoolMatch.Success)
+            {
+                target = schoolMatch.Groups["page"].Success
+                    ? "/" + schoolMatch.Groups["page"].Value.ToLowerInvariant()
+                    : "/";
+            }
+        }
+
+        if (target is null)
+        {
+            return;
+        }
+
+        context.HttpContext.Response.StatusCode = StatusCodes.Status301MovedPermanently;
+        context.HttpContext.Response.Headers.Location = target;
+        context.Result = RuleResult.EndResponse;
+    }));
 
 app.UseStaticFiles();
 app.UseRouting();
 
-app.MapDefaultControllerRoute();
+// Literal route table: exactly the seven school pages plus the error handler.
+// Anything else (e.g. /school-one/about, /Home/About) falls through to 404.
+app.MapControllerRoute(name: "home", pattern: "", defaults: new { controller = "Home", action = "Index" });
+app.MapControllerRoute(name: "about", pattern: "about", defaults: new { controller = "Home", action = "About" });
+app.MapControllerRoute(name: "academics", pattern: "academics", defaults: new { controller = "Home", action = "Academics" });
+app.MapControllerRoute(name: "admissions", pattern: "admissions", defaults: new { controller = "Home", action = "Admissions" });
+app.MapControllerRoute(name: "staff", pattern: "staff", defaults: new { controller = "Home", action = "Staff" });
+app.MapControllerRoute(name: "calendar", pattern: "calendar", defaults: new { controller = "Home", action = "Calendar" });
+app.MapControllerRoute(name: "contact", pattern: "contact", defaults: new { controller = "Home", action = "Contact" });
+app.MapControllerRoute(name: "error", pattern: "Home/Error", defaults: new { controller = "Home", action = "Error" });
 
 app.Run();
 

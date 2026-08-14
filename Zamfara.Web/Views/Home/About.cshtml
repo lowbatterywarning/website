@@ -1,4 +1,4 @@
-@model SchoolPageViewModel
+@model PageMeta
 
 <main>
 
@@ -6,7 +6,7 @@
   <!-- ==================== PAGE BANNER ==================== -->
   <section class="page-banner">
     <div class="container">
-      <h1>About @Model.Site.Name</h1>
+      <h1>About @School.Name</h1>
     </div>
   </section>
 
@@ -17,7 +17,7 @@
       <div>
         <h2>Our Mission</h2>
         <p>
-          At @Model.Site.Name, we believe education transforms lives. Our mission is to
+          At @School.Name, we believe education transforms lives. Our mission is to
           cultivate inquisitive minds, strong character, and a deep sense of purpose
           in every student. We provide a challenging yet nurturing environment where
           young people discover who they are and who they want to become.
@@ -33,7 +33,7 @@
 
         <h2 class="mt-5">Our History</h2>
         <p>
-          @Model.Site.Name was founded in 1995 by a group of educators and parents who
+          @School.Name was founded in 1995 by a group of educators and parents who
           envisioned a school where children would be known, challenged, and
           loved. What began with 42 students and four classrooms has grown into
           a thriving K–12 community of over 800 students, while staying true to
@@ -69,7 +69,7 @@
             <p style="font-size:0.8rem; color:#888;">Ph.D., UC Berkeley</p>
           </div>
         </div>
-        <p class="mt-2"><a asp-controller="School" asp-action="Staff" asp-route-site="@Model.Site.Slug">View all staff & faculty →</a></p>
+        <p class="mt-2"><a asp-action="Staff">View all staff & faculty →</a></p>
 
         <h2 class="mt-5">Core Values</h2>
         <ul class="values-grid mt-3">
@@ -104,9 +104,9 @@
           <li><strong>Faculty with Advanced Degrees:</strong> 78%</li>
         </ul>
         <h3 class="mt-3">Accreditation</h3>
-        <p style="font-size:0.85rem;">@Model.Site.Name is fully accredited by the [Accrediting Body] and the [State/Regional Association of Independent Schools].</p>
+        <p style="font-size:0.85rem;">@School.Name is fully accredited by the [Accrediting Body] and the [State/Regional Association of Independent Schools].</p>
         <h3 class="mt-3">Visit Us</h3>
-        <p style="font-size:0.9rem;">Experience @Model.Site.Name in person. <a asp-controller="School" asp-action="Contact" asp-route-site="@Model.Site.Slug">Schedule a campus tour →</a></p>
+        <p style="font-size:0.9rem;">Experience @School.Name in person. <a asp-action="Contact">Schedule a campus tour →</a></p>
       </aside>
 
     </div>

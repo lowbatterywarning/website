@@ -1,4 +1,4 @@
-@model SchoolPageViewModel
+@model PageMeta
 
 <main>
 
@@ -57,7 +57,7 @@
           <h2>Find Us</h2>
           <p>We're located in the heart of [Your City], easily accessible from major highways and public transit.</p>
           <!-- [EMBED: Google Maps iframe — replace src with your actual map embed URL] -->
-          <div class="map-placeholder mt-3" role="img" aria-label="Map showing @Model.Site.Name location at 123 Education Lane">
+          <div class="map-placeholder mt-3" role="img" aria-label="Map showing @School.Name location at 123 Education Lane">
             Google Maps Embed<br>
             <small style="display:block; margin-top:0.5rem;">Replace with &lt;iframe&gt; embed code</small>
           </div>
@@ -89,7 +89,7 @@
         <p>Monday – Thursday, 9:00 AM – 3:00 PM. Closed Fridays.</p>
 
         <h3 class="mt-4">Holiday Closures</h3>
-        <p>The school office is closed on all major holidays. Please refer to the <a asp-controller="School" asp-action="Calendar" asp-route-site="@Model.Site.Slug">school calendar</a> for specific dates.</p>
+        <p>The school office is closed on all major holidays. Please refer to the <a asp-action="Calendar">school calendar</a> for specific dates.</p>
       </div>
 
       <aside class="sidebar">
