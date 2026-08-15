@@ -1,4 +1,8 @@
-@model PageMeta
+@model PageModel
+
+@{
+    var school = Model.School;
+}
 
 <main>
 
@@ -6,7 +10,7 @@
   <!-- ==================== PAGE BANNER ==================== -->
   <section class="page-banner">
     <div class="container">
-      <h1>About @School.Name</h1>
+      <h1>About @school.Name</h1>
     </div>
   </section>
 
@@ -17,7 +21,7 @@
       <div>
         <h2>Our School</h2>
         <p>
-          @School.Name is a prominent public secondary institution in Zamfara
+          @school.Name is a prominent public secondary institution in Zamfara
           State, Nigeria, established in 1969.
         </p>
 
@@ -62,7 +66,7 @@
 
         <h2 class="mt-5">Our Mission</h2>
         <p class="mt-2">
-          At @School.Name, we believe education transforms lives. Our mission is to
+          At @school.Name, we believe education transforms lives. Our mission is to
           cultivate inquisitive minds, strong character, and a deep sense of purpose
           in every student. We provide a challenging yet nurturing environment where
           young people discover who they are and who they want to become.
@@ -106,7 +110,7 @@
           <li><strong>Certificates:</strong> WAEC, NECO</li>
         </ul>
         <h3 class="mt-3">Visit Us</h3>
-        <p style="font-size:0.9rem;">Experience @School.Name in person. <a asp-action="Contact">Schedule a campus tour →</a></p>
+        <p style="font-size:0.9rem;">Experience @school.Name in person. Call @school.Phone or email @school.Email to arrange a campus tour.</p>
       </aside>
 
     </div>

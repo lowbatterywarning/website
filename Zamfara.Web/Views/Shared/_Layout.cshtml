@@ -1,38 +1,55 @@
-@model PageMeta
+@model PageModel
 @{
+    var school = Model.School;
     var origin = $"{Context.Request.Scheme}://{Context.Request.Host}";
     var pageUrl = $"{origin}{Context.Request.Path}";
+    // Per-school theme: the stylesheet reads from these variables, so each
+    // tenant re-skins the same static CSS. Colors are validated #RRGGBB hex.
+    var primary = BrandUtils.SafeHex(school.PrimaryColor, "#1B2A4A");
+    var accent = BrandUtils.SafeHex(school.AccentColor, "#C9A84C");
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="@Model.Description">
-  <title>@Model.Title</title>
+  <meta name="description" content="@Model.Meta.Description">
+  <title>@Model.Meta.Title</title>
   <!-- Open Graph / Social Sharing -->
-  <meta property="og:title" content="@Model.OgTitle">
-  <meta property="og:description" content="@Model.OgDescription">
+  <meta property="og:title" content="@Model.Meta.OgTitle">
+  <meta property="og:description" content="@Model.Meta.OgDescription">
   <meta property="og:type" content="website">
   <meta property="og:url" content="@pageUrl">
   <meta property="og:image" content="@origin/images/og-default.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Favicon (inline SVG — navy rounded square with gold "S") -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231B2A4A'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-family='Georgia,serif' font-weight='bold' font-size='60' fill='%23C9A84C'%3ES%3C/text%3E%3C/svg%3E">
+  <!-- Favicon: dynamic data-URI SVG in the school's colors with its initial -->
+  <link rel="icon" href="@BrandUtils.FavIconUri(school)">
   <link rel="apple-touch-icon" href="~/images/apple-touch-icon.png">
   <link rel="stylesheet" href="~/css/style.css">
+  <!-- Theme variables come AFTER the stylesheet so per-school values win. -->
+  <style>
+    :root {
+      --navy: @primary;
+      --navy-light: @BrandUtils.Lighten(primary, 0.15);
+      --navy-rgb: @BrandUtils.Rgb(primary);
+      --gold: @accent;
+      --gold-light: @BrandUtils.Lighten(accent, 0.08);
+      --gold-dark: @BrandUtils.Darken(accent, 0.15);
+      --gold-rgb: @BrandUtils.Rgb(accent);
+    }
+  </style>
 </head>
 <body>
 
   <!-- ==================== HEADER ==================== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a asp-action="Index" class="logo" aria-label="Government Science Secondary School, Gusau — Home">
-        <span class="logo-icon">&#x1F393;</span>
-        <span class="logo-full">@School.Name</span>
-        <span class="logo-short" aria-hidden="true">GSSS Gusau</span>
+      <a asp-action="Index" class="logo" aria-label="@school.Name — Home">
+        <span class="logo-icon">@school.LogoEmoji</span>
+        <span class="logo-full">@school.Name</span>
+        <span class="logo-short" aria-hidden="true">@school.ShortName</span>
       </a>
       <button class="hamburger" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
@@ -43,9 +60,11 @@
           <li><a asp-action="About">About</a></li>
           <li><a asp-action="Academics">Academics</a></li>
           <li><a asp-action="Admissions">Admissions</a></li>
+          <li><a asp-action="News">News</a></li>
           <li><a asp-action="Staff">Staff</a></li>
           <li><a asp-action="Calendar">Calendar</a></li>
-          <li><a asp-action="Contact">Contact</a></li>
+          <li><a asp-action="Gallery">Gallery</a></li>
+          <li><a asp-action="Faq">FAQ</a></li>
         </ul>
       </nav>
     </div>
@@ -58,9 +77,9 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col">
-          <h3>@School.Name</h3>
-          <p>123 Education Lane<br>Your City, ST 12345</p>
-          <p>Phone: (555) 123-4567<br>Email: info@@school.edu</p>
+          <h3>@school.Name</h3>
+          <p>@school.Address<br>@school.Location</p>
+          <p>Phone: @school.Phone<br>Email: @school.Email</p>
         </div>
         <div class="footer-col">
           <h3>Office Hours</h3>
@@ -76,9 +95,11 @@
             <li><a asp-action="About">About Us</a></li>
             <li><a asp-action="Academics">Academics</a></li>
             <li><a asp-action="Admissions">Admissions</a></li>
+            <li><a asp-action="News">News</a></li>
             <li><a asp-action="Staff">Staff</a></li>
             <li><a asp-action="Calendar">Calendar</a></li>
-            <li><a asp-action="Contact">Contact</a></li>
+            <li><a asp-action="Gallery">Gallery</a></li>
+            <li><a asp-action="Faq">FAQ</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -92,7 +113,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 @School.Name. All rights reserved.</p>
+        <p>&copy; @DateTime.Now.Year @school.Name. All rights reserved.</p>
       </div>
     </div>
   </footer>

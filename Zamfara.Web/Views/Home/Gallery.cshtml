@@ -1,0 +1,47 @@
+@model GalleryViewModel
+@{
+    var school = Model.School;
+}
+
+<main>
+
+
+  <!-- ==================== PAGE BANNER ==================== -->
+  <section class="page-banner">
+    <div class="container">
+      <h1>Photo Gallery</h1>
+    </div>
+  </section>
+
+  <!-- ==================== GALLERY CONTENT ==================== -->
+  <section class="section">
+    <div class="container">
+      <p style="max-width:600px;">A look at life on the @school.Name campus.</p>
+
+      @if (Model.Items.Count == 0)
+      {
+        <p class="mt-3">No photos yet — check back soon.</p>
+      }
+      else
+      {
+        <div class="gallery-grid mt-3">
+          @foreach (var item in Model.Items)
+          {
+            <figure class="gallery-item">
+              <img src="~/@item.ImagePath" alt="@item.Title" loading="lazy">
+              <figcaption>
+                <strong>@item.Title</strong>
+                @if (!string.IsNullOrWhiteSpace(item.Caption))
+                {
+                  <span>@item.Caption</span>
+                }
+              </figcaption>
+            </figure>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+
+</main>

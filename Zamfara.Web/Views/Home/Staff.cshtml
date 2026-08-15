@@ -1,4 +1,8 @@
-@model PageMeta
+@model PageModel
+
+@{
+    var school = Model.School;
+}
 
 <main>
 
@@ -16,7 +20,7 @@
 
       <h2 style="text-align:center;">Leadership Team</h2>
       <p style="text-align:center; max-width:600px; margin:0 auto 2rem;">
-        Experienced educators and administrators dedicated to guiding @School.Name's mission and supporting every student's journey.
+        Experienced educators and administrators dedicated to guiding @school.Name's mission and supporting every student's journey.
       </p>
 
       <div class="staff-grid">

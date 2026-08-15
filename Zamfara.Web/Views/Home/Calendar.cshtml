@@ -1,4 +1,8 @@
-@model PageMeta
+@model CalendarViewModel
+@{
+    string TagClass(string category) =>
+        category.ToLowerInvariant() == "exams" ? "tag-exam" : "tag-" + category.ToLowerInvariant();
+}
 
 <main>
 
@@ -29,90 +33,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Aug 15, 2026</td>
-                <td>First Day of School</td>
-                <td><span class="event-tag tag-academic">Academic</span></td>
-                <td>All grades; early dismissal K-5 at 12:00 PM</td>
-              </tr>
-              <tr>
-                <td>Sep 4, 2026</td>
-                <td>Labor Day</td>
-                <td><span class="event-tag tag-holiday">Holiday</span></td>
-                <td>Campus closed</td>
-              </tr>
-              <tr>
-                <td>Sep 22, 2026</td>
-                <td>Back to School Night</td>
-                <td><span class="event-tag tag-event">Event</span></td>
-                <td>6:00 PM – 8:00 PM, all divisions</td>
-              </tr>
-              <tr>
-                <td>Oct 9, 2026</td>
-                <td>Fall Festival</td>
-                <td><span class="event-tag tag-event">Event</span></td>
-                <td>11:00 AM – 3:00 PM, main field</td>
-              </tr>
-              <tr>
-                <td>Oct 20, 2026</td>
-                <td>Parent-Teacher Conferences</td>
-                <td><span class="event-tag tag-academic">Academic</span></td>
-                <td>No classes; scheduled appointments</td>
-              </tr>
-              <tr>
-                <td>Nov 15, 2026</td>
-                <td>Fall Open House</td>
-                <td><span class="event-tag tag-event">Event</span></td>
-                <td>10:00 AM – 1:00 PM, prospective families</td>
-              </tr>
-              <tr>
-                <td>Nov 22–26, 2026</td>
-                <td>Thanksgiving Break</td>
-                <td><span class="event-tag tag-holiday">Holiday</span></td>
-                <td>No school; classes resume Nov 29</td>
-              </tr>
-              <tr>
-                <td>Dec 15–17, 2026</td>
-                <td>Upper School Fall Exams</td>
-                <td><span class="event-tag tag-exam">Exams</span></td>
-                <td>Half-day schedule, Grades 9-12</td>
-              </tr>
-              <tr>
-                <td>Dec 20, 2026 – Jan 2, 2027</td>
-                <td>Winter Break</td>
-                <td><span class="event-tag tag-holiday">Holiday</span></td>
-                <td>No school; classes resume Jan 3</td>
-              </tr>
-              <tr>
-                <td>Jan 16, 2027</td>
-                <td>Martin Luther King Jr. Day</td>
-                <td><span class="event-tag tag-holiday">Holiday</span></td>
-                <td>Campus closed</td>
-              </tr>
-              <tr>
-                <td>Mar 13–17, 2027</td>
-                <td>Spring Break</td>
-                <td><span class="event-tag tag-holiday">Holiday</span></td>
-                <td>No school</td>
-              </tr>
-              <tr>
-                <td>May 22–24, 2027</td>
-                <td>Upper School Spring Exams</td>
-                <td><span class="event-tag tag-exam">Exams</span></td>
-                <td>Grades 9-12</td>
-              </tr>
-              <tr>
-                <td>May 26, 2027</td>
-                <td>Senior Graduation</td>
-                <td><span class="event-tag tag-event">Event</span></td>
-                <td>4:00 PM ceremony, main auditorium</td>
-              </tr>
-              <tr>
-                <td>Jun 1, 2027</td>
-                <td>Last Day of School</td>
-                <td><span class="event-tag tag-academic">Academic</span></td>
-                <td>Half-day; K-8 closing ceremony 10:00 AM</td>
-              </tr>
+              @foreach (var e in Model.Events)
+              {
+                <tr>
+                  <td>@e.DateText</td>
+                  <td>@e.Title</td>
+                  <td><span class="event-tag @TagClass(e.Category)">@e.Category</span></td>
+                  <td>@e.Details</td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -120,46 +49,19 @@
         <h2 class="mt-5">Upcoming Events</h2>
 
         <ul class="event-list">
-          <li class="event-item">
-            <div class="event-date">
-              <span class="day">15</span>
-              <span class="month">Aug</span>
-            </div>
-            <div>
-              <strong>First Day of School</strong>
-              <p style="margin:0; font-size:0.9rem;">All grades return. Early dismissal at 12:00 PM for K-5. Welcome coffee for new families at 8:15 AM in the Commons.</p>
-            </div>
-          </li>
-          <li class="event-item">
-            <div class="event-date">
-              <span class="day">22</span>
-              <span class="month">Sep</span>
-            </div>
-            <div>
-              <strong>Back to School Night</strong>
-              <p style="margin:0; font-size:0.9rem;">Parents and guardians meet teachers and learn about this year's curriculum. 6:00 PM – 8:00 PM. Childcare provided.</p>
-            </div>
-          </li>
-          <li class="event-item">
-            <div class="event-date">
-              <span class="day">09</span>
-              <span class="month">Oct</span>
-            </div>
-            <div>
-              <strong>Fall Festival & Homecoming</strong>
-              <p style="margin:0; font-size:0.9rem;">Family-friendly activities, food trucks, games, and alumni soccer match. 11:00 AM – 4:00 PM on the main field.</p>
-            </div>
-          </li>
-          <li class="event-item">
-            <div class="event-date">
-              <span class="day">15</span>
-              <span class="month">Nov</span>
-            </div>
-            <div>
-              <strong>Fall Open House</strong>
-              <p style="margin:0; font-size:0.9rem;">Prospective families tour campus, visit classes, and meet faculty and students. 10:00 AM – 1:00 PM. Registration required.</p>
-            </div>
-          </li>
+          @foreach (var e in Model.Upcoming)
+          {
+            <li class="event-item">
+              <div class="event-date">
+                <span class="day">@e.DayText</span>
+                <span class="month">@e.MonthText</span>
+              </div>
+              <div>
+                <strong>@e.Title</strong>
+                <p style="margin:0; font-size:0.9rem;">@(e.FeaturedText ?? e.Details)</p>
+              </div>
+            </li>
+          }
         </ul>
       </div>
 

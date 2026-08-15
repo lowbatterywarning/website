@@ -5,3 +5,6 @@
 # IDE
 .vs/
 *.user
+
+# Runtime data (SQLite school database) — never committed.
+**/App_Data/

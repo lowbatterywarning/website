@@ -1,4 +1,8 @@
-@model PageMeta
+@model PageModel
+
+@{
+    var school = Model.School;
+}
 
 <main>
 
@@ -17,7 +21,7 @@
       <div>
         <h2>Curriculum Overview</h2>
         <p>
-          At @School.Name, our curriculum is designed to inspire curiosity, develop
+          At @school.Name, our curriculum is designed to inspire curiosity, develop
           critical thinking, and build a strong foundation for lifelong learning.
           We follow a standards-aligned framework enhanced by project-based
           learning, interdisciplinary studies, and real-world application.

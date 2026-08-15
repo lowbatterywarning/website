@@ -1,0 +1,41 @@
+@model FaqViewModel
+@{
+    var school = Model.School;
+}
+
+<main>
+
+
+  <!-- ==================== PAGE BANNER ==================== -->
+  <section class="page-banner">
+    <div class="container">
+      <h1>Frequently Asked Questions</h1>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ CONTENT ==================== -->
+  <section class="section">
+    <div class="container" style="max-width:820px;">
+      <p>Answers to the questions families ask most about @school.Name.</p>
+
+      @if (Model.Faqs.Count == 0)
+      {
+        <p class="mt-3">No questions yet — check back soon.</p>
+      }
+      else
+      {
+        <div class="faq-list mt-3">
+          @foreach (var f in Model.Faqs)
+          {
+            <details class="faq-item">
+              <summary>@f.Question</summary>
+              <div class="faq-answer">@f.Answer</div>
+            </details>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+
+</main>

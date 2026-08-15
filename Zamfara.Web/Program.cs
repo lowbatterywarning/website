@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.EntityFrameworkCore;
+using Zamfara.Web.Data;
+using Zamfara.Web.Infrastructure;
 
 // Resolve the project directory (where wwwroot lives) even when the app is
 // launched from elsewhere, e.g. `dotnet bin/Debug/net8.0/Zamfara.Web.dll`
@@ -22,10 +25,29 @@ builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
+// SQLite keeps the whole school directory + content in one file next to the
+// app — ideal for the homelab server (no DB process, trivial backup by copying).
+var dbPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "zamfara.db");
+Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+builder.Services.AddDbContext<ZamfaraDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}"));
+
+// Singleton tenant resolver: caches the (tiny) Schools table for the process
+// lifetime and resolves the school slug from the request Host.
+builder.Services.AddSingleton<TenantResolver>();
+
 // HSTS for 365 days (includes *.zamfara.org subdomains) once in production.
 builder.Services.Configure<HstsOptions>(options => options.MaxAge = TimeSpan.FromDays(365));
 
 var app = builder.Build();
+
+// Create the database and seed the three schools on first run.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ZamfaraDbContext>();
+    db.Database.EnsureCreated();
+    Seeder.Seed(db);
+}
 
 // Security headers on every response: informational site, no framing, no MIME
 // sniffing, and a strict content policy. The only script/style sources are our
@@ -71,6 +93,10 @@ app.Use(async (context, next) =>
     await next();
 });
 
+// Stamp every request as belonging to a school sub-site (Host:
+// {slug}.zamfara.org) or to the portal directory (apex/unknown host).
+app.UseMiddleware<TenantMiddleware>();
+
 // Honor X-Forwarded-Proto only when a TLS-terminating reverse proxy is
 // explicitly enabled, and only from the loopback or Docker bridge networks.
 // When on, the proxy must be the only thing that can reach this port, otherwise
@@ -104,10 +130,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-// 301-redirect legacy URLs to the single-site equivalents: the original static
+// 301-redirect legacy URLs to the current equivalents: the original static
 // .html paths and the retired /school-one|two|three areas. Targets are
 // canonicalized to lowercase without a trailing slash; unknown legacy paths are
-// left alone so routing answers 404.
+// left alone so routing answers 404. contact.* now points at the home page:
+// the Contact page was retired and contact details live in the footer.
 app.UseRewriter(new RewriteOptions()
     .Add(context =>
     {
@@ -120,9 +147,12 @@ app.UseRewriter(new RewriteOptions()
             RegexOptions.IgnoreCase);
         if (htmlMatch.Success)
         {
-            target = htmlMatch.Groups["page"].Value.Equals("index", StringComparison.OrdinalIgnoreCase)
+            var page = htmlMatch.Groups["page"].Value;
+            target = page.Equals("index", StringComparison.OrdinalIgnoreCase)
                 ? "/"
-                : "/" + htmlMatch.Groups["page"].Value.ToLowerInvariant();
+                : page.Equals("contact", StringComparison.OrdinalIgnoreCase)
+                    ? "/"
+                    : "/" + page.ToLowerInvariant();
         }
         else
         {
@@ -132,9 +162,10 @@ app.UseRewriter(new RewriteOptions()
                 RegexOptions.IgnoreCase);
             if (schoolMatch.Success)
             {
-                target = schoolMatch.Groups["page"].Success
-                    ? "/" + schoolMatch.Groups["page"].Value.ToLowerInvariant()
-                    : "/";
+                target = schoolMatch.Groups["page"].Success &&
+                    !schoolMatch.Groups["page"].Value.Equals("contact", StringComparison.OrdinalIgnoreCase)
+                        ? "/" + schoolMatch.Groups["page"].Value.ToLowerInvariant()
+                        : "/";
             }
         }
 
@@ -169,15 +200,17 @@ app.UseStaticFiles(new StaticFileOptions
 });
 app.UseRouting();
 
-// Literal route table: exactly the seven school pages plus the error handler.
-// Anything else (e.g. /school-one/about, /Home/About) falls through to 404.
+// Literal route table: the eight template pages plus the error handler.
+// Anything else (e.g. /Home/About) falls through to 404.
 app.MapControllerRoute(name: "home", pattern: "", defaults: new { controller = "Home", action = "Index" });
 app.MapControllerRoute(name: "about", pattern: "about", defaults: new { controller = "Home", action = "About" });
 app.MapControllerRoute(name: "academics", pattern: "academics", defaults: new { controller = "Home", action = "Academics" });
 app.MapControllerRoute(name: "admissions", pattern: "admissions", defaults: new { controller = "Home", action = "Admissions" });
+app.MapControllerRoute(name: "news", pattern: "news", defaults: new { controller = "Home", action = "News" });
 app.MapControllerRoute(name: "staff", pattern: "staff", defaults: new { controller = "Home", action = "Staff" });
 app.MapControllerRoute(name: "calendar", pattern: "calendar", defaults: new { controller = "Home", action = "Calendar" });
-app.MapControllerRoute(name: "contact", pattern: "contact", defaults: new { controller = "Home", action = "Contact" });
+app.MapControllerRoute(name: "gallery", pattern: "gallery", defaults: new { controller = "Home", action = "Gallery" });
+app.MapControllerRoute(name: "faq", pattern: "faq", defaults: new { controller = "Home", action = "Faq" });
 app.MapControllerRoute(name: "error", pattern: "Home/Error", defaults: new { controller = "Home", action = "Error" });
 
 app.Run();

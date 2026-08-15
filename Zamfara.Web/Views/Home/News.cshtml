@@ -1,0 +1,46 @@
+@model NewsViewModel
+@{
+    var school = Model.School;
+}
+
+<main>
+
+
+  <!-- ==================== PAGE BANNER ==================== -->
+  <section class="page-banner">
+    <div class="container">
+      <h1>News &amp; Announcements</h1>
+    </div>
+  </section>
+
+  <!-- ==================== NEWS CONTENT ==================== -->
+  <section class="section">
+    <div class="container">
+      <p style="max-width:600px;">Stay connected with the latest happenings around @school.Name.</p>
+
+      @if (Model.News.Count == 0)
+      {
+        <p class="mt-3">No news yet — check back soon.</p>
+      }
+      else
+      {
+        <div class="news-grid mt-3">
+          @foreach (var n in Model.News)
+          {
+            <article class="news-card">
+              <!-- [IMAGE: @n.ImageLabel — <img src="..." alt="..." loading="lazy">] -->
+              <div class="news-img" role="img" aria-label="@n.ImageLabel">[IMAGE: @n.ImageLabel]</div>
+              <div class="news-body">
+                <p class="news-date">@n.DateText</p>
+                <h3>@n.Title</h3>
+                <p>@n.Body</p>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+
+</main>
