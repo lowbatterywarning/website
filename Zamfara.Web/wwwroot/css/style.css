@@ -15,6 +15,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -23,6 +24,7 @@ body {
   line-height: 1.7;
   color: #222;
   background-color: #fff;
+  overflow-x: clip;
 }
 
 /* ----- Typography ----- */
@@ -173,6 +175,12 @@ a:hover { color: #C9A84C; }
 .logo span {
   color: #C9A84C;
 }
+.logo-short {
+  display: none;
+}
+.logo .logo-icon {
+  flex-shrink: 0;
+}
 
 /* Desktop navigation */
 .header-inner nav {
@@ -224,6 +232,7 @@ a:hover { color: #C9A84C; }
   border: none;
   cursor: pointer;
   padding: 0;
+  flex-shrink: 0;
   z-index: 1001;
 }
 .hamburger span {
@@ -1039,6 +1048,20 @@ table.cal-table {
   margin: 0;
 }
 
+/* Grid children: allow shrinking so wide content (e.g. tables) can't blow out a grid column */
+.content-layout > *,
+.about-teaser > *,
+.highlight-grid > *,
+.news-grid > *,
+.footer-grid > *,
+.values-grid > *,
+.programs-grid > *,
+.leadership-mini > *,
+.level-grid > *,
+.contact-cards > * {
+  min-width: 0;
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -1148,6 +1171,10 @@ table.cal-table {
 
   .logo {
     font-size: 1.25rem;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .logo .logo-icon {
     font-size: 1.5rem;
@@ -1236,6 +1263,73 @@ table.cal-table {
   }
   .process-steps .step-num {
     margin: 0 auto;
+  }
+}
+
+/* ---- Phones (≤640px): calendar becomes stacked cards ---- */
+@media (max-width: 640px) {
+  table.cal-table {
+    min-width: 0;
+    width: 100%;
+  }
+  .cal-table thead {
+    display: none;
+  }
+  .cal-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .cal-table tbody tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #E4E7EB;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 1px 3px rgba(27, 42, 74, 0.06);
+  }
+  .cal-table tbody tr:hover {
+    background: #fff;
+  }
+  .cal-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.4rem 0;
+    text-align: right;
+    border-bottom: 1px dashed #E4E7EB;
+  }
+  .cal-table td:last-child {
+    border-bottom: none;
+  }
+  .cal-table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-weight: 700;
+    color: #1B2A4A;
+    text-align: left;
+  }
+}
+
+/* ---- Phones (≤480px): short school name, guaranteed-visible hamburger ---- */
+@media (max-width: 480px) {
+  .logo {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .logo-full {
+    display: none;
+  }
+  .logo-short {
+    display: inline;
+  }
+  .header-inner {
+    gap: 0.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 

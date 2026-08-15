@@ -148,7 +148,25 @@ app.UseRewriter(new RewriteOptions()
         context.Result = RuleResult.EndResponse;
     }));
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    // CSS/JS must always revalidate so a redeploy is picked up immediately
+    // (ETag-backed conditional requests keep this cheap). Images get a short
+    // public cache: the site is small and photos get swapped by hand.
+    OnPrepareResponse = ctx =>
+    {
+        var path = ctx.Context.Request.Path.Value ?? "";
+        if (path.EndsWith(".css", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".js", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Context.Response.Headers.CacheControl = "no-cache";
+        }
+        else
+        {
+            ctx.Context.Response.Headers.CacheControl = "public, max-age=3600";
+        }
+    }
+});
 app.UseRouting();
 
 // Literal route table: exactly the seven school pages plus the error handler.

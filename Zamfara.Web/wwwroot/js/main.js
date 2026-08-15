@@ -31,6 +31,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ---- Calendar tables: tag cells with column labels for mobile card layout ----
+  document.querySelectorAll(".cal-table").forEach(function (table) {
+    const headers = Array.from(table.querySelectorAll("thead th")).map(function (th) {
+      return th.textContent.trim();
+    });
+    table.querySelectorAll("tbody tr").forEach(function (row) {
+      row.querySelectorAll("td").forEach(function (td, i) {
+        if (headers[i]) {
+          td.setAttribute("data-label", headers[i]);
+        }
+      });
+    });
+  });
+
   // ---- Highlight current page in nav ----
   // Compare full paths so trailing slashes (e.g. /about/) still match.
   var currentPath = window.location.pathname.replace(/\/+$/, "");

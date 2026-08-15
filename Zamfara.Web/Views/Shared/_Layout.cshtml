@@ -29,8 +29,10 @@
   <!-- ==================== HEADER ==================== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a asp-action="Index" class="logo">
-        <span class="logo-icon">&#x1F393;</span> <span>@School.Name</span>
+      <a asp-action="Index" class="logo" aria-label="Government Science Secondary School, Gusau — Home">
+        <span class="logo-icon">&#x1F393;</span>
+        <span class="logo-full">@School.Name</span>
+        <span class="logo-short" aria-hidden="true">GSSS Gusau</span>
       </a>
       <button class="hamburger" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
