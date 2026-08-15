@@ -1,7 +1,8 @@
-# Zamfara Schools — ASP.NET Core MVC
+# Government Science Secondary School, Gusau — ASP.NET Core MVC
 
 A port of the original static HTML school-template site into a single ASP.NET
-Core MVC project. It serves **one generic school site** at the site root:
+Core MVC project. It serves **one school site** at the site root for
+Government Science Secondary School, Gusau:
 
 | Route | Page |
 | --- | --- |
@@ -13,9 +14,8 @@ Core MVC project. It serves **one generic school site** at the site root:
 | `/calendar` | Calendar |
 | `/contact` | Contact |
 
-The school name is the `[SCHOOL]` placeholder carried over from the original
-template — rebrand by changing one constant in
-[`School.cs`](Zamfara.Web/Models/School.cs) (see
+The school name is "Government Science Secondary School, Gusau" — rebrand by
+changing one constant in [`School.cs`](Zamfara.Web/Models/School.cs) (see
 [Rebranding the school](#rebranding-the-school)).
 
 ## Prerequisites
@@ -43,7 +43,7 @@ dotnet Zamfara.Web/bin/Debug/net8.0/Zamfara.Web.dll
 | --- | --- |
 | `Zamfara.Web/Program.cs` | Pipeline, literal route table, legacy 301 rewrites |
 | `Zamfara.Web/Controllers/HomeController.cs` | One action per page + error page |
-| `Zamfara.Web/Models/School.cs` | The `[SCHOOL]` name placeholder (single rebrand point) |
+| `Zamfara.Web/Models/School.cs` | School name constant (single rebrand point) |
 | `Zamfara.Web/Models/SchoolPages.cs` | Per-page head metadata (port of the original `<head>` sections) |
 | `Zamfara.Web/Views/Shared/_Layout.cshtml` | Ported school header/footer shell |
 | `Zamfara.Web/Views/Home/*.cshtml` | The 7 school pages |
@@ -57,9 +57,10 @@ Legacy URLs redirect (301, case-insensitive, trailing slashes allowed):
 ## Rebranding the school
 
 Change `School.Name` in [`School.cs`](Zamfara.Web/Models/School.cs) — every
-page, title, meta tag and nav item picks the new name up automatically. (The
-original template literally used `[SCHOOL]` as the school name, so that is the
-default until you set a real one.)
+page, title, meta tag and nav item picks the new name up automatically. It is
+currently set to "Government Science Secondary School, Gusau". (The original
+template literally used `[SCHOOL]` as the school name, so that was the default
+until the real name was set.)
 
 ## Assumptions and known placeholders
 

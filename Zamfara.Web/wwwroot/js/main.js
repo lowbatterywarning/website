@@ -1,5 +1,5 @@
 /* ============================================================
-   School Sites — Main JavaScript
+   School Site — Main JavaScript
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", function () {

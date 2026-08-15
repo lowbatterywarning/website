@@ -4,8 +4,9 @@ using Zamfara.Web.Models;
 namespace Zamfara.Web.Controllers;
 
 /// <summary>
-/// The whole site: a single generic school at the root paths
-/// /, /about, /academics, /admissions, /staff, /calendar, /contact.
+/// The whole site: one school (Government Science Secondary School, Gusau) at
+/// the root paths /, /about, /academics, /admissions, /staff, /calendar,
+/// /contact.
 /// </summary>
 public sealed class HomeController : Controller
 {
