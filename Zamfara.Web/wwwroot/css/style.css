@@ -148,6 +148,7 @@ a:hover { color: #C9A84C; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.25rem;
   min-height: 64px;
   padding: 0 1.25rem;
   max-width: 1100px;
@@ -156,7 +157,7 @@ a:hover { color: #C9A84C; }
 
 .logo {
   font-family: Georgia, "Times New Roman", Times, serif;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #fff;
   text-decoration: none;
@@ -167,13 +168,16 @@ a:hover { color: #C9A84C; }
   white-space: nowrap;
 }
 .logo .logo-icon {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
 }
 .logo span {
   color: #C9A84C;
 }
 
 /* Desktop navigation */
+.header-inner nav {
+  margin-left: auto;
+}
 .main-nav {
   list-style: none;
   display: flex;
@@ -188,10 +192,10 @@ a:hover { color: #C9A84C; }
 .main-nav a {
   display: block;
   color: #fff;
-  padding: 0.5rem 0.85rem;
+  padding: 0.5rem 0.7rem;
   border-radius: 4px;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   text-decoration: none;
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -1024,6 +1028,37 @@ table.cal-table {
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+
+/* ---- Header nav (≤1100px): hamburger when the full nav would crowd the logo ---- */
+@media (max-width: 1100px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .main-nav {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: #1B2A4A;
+    padding: 0.5rem 0 1rem;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .main-nav a {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+}
 
 /* ---- Tablet (≤1024px): hamburger nav, 2-column grids ---- */
 @media (max-width: 1024px) {
