@@ -570,6 +570,13 @@ a:hover { color: #C9A84C; }
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
+.about-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
 .about-teaser .teaser-text {
   order: 1;
 }
