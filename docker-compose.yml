@@ -25,7 +25,14 @@ services:
     read_only: true
     tmpfs:
       - /tmp
+    volumes:
+      # SQLite database + media live here. Named volume survives container
+      # recreation and stays writable despite read_only: true above.
+      - zamfara-data:/app/App_Data
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+
+volumes:
+  zamfara-data:

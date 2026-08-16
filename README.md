@@ -134,6 +134,10 @@ container:
   to be 443 (`ASPNETCORE_HTTPS_PORT`) so plain-HTTP requests get a proper
   `https://` redirect;
 - has a built-in `HEALTHCHECK` against `/healthz`;
+- stores its SQLite database in the `zamfara-data` volume (mounted at
+  `/app/App_Data`) so content survives container recreation and the
+  read-only root filesystem stays read-only. Override the location with the
+  `ZAMFARA_DB_PATH` environment variable if you use a bind mount instead;
 - sets `ASPNETCORE_ENVIRONMENT=Production`, so HSTS, HTTPS redirection and the
   error page are active.
 

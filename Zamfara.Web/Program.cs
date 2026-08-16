@@ -27,7 +27,10 @@ builder.Services.AddControllersWithViews(options =>
 
 // SQLite keeps the whole school directory + content in one file next to the
 // app — ideal for the homelab server (no DB process, trivial backup by copying).
-var dbPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "zamfara.db");
+// ZAMFARA_DB_PATH overrides the location; in Docker it points at the mounted
+// /app/App_Data volume so the DB survives recreation of a read-only container.
+var dbPath = builder.Configuration["ZAMFARA_DB_PATH"]
+    ?? Path.Combine(builder.Environment.ContentRootPath, "App_Data", "zamfara.db");
 Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
 builder.Services.AddDbContext<ZamfaraDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));

@@ -20,6 +20,11 @@ ENV ASPNETCORE_ENVIRONMENT=Production \
     ASPNETCORE_HTTPS_PORT=443 \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
 EXPOSE 8080
+# SQLite lives in a volume so the DB survives container recreation and stays
+# writable even when the container runs with a read-only root filesystem.
+# Create the directory as root first, then hand it to the app user.
+RUN mkdir -p /app/App_Data && chown $APP_UID:$APP_UID /app/App_Data
+VOLUME /app/App_Data
 # Run as the non-root 'app' user (uid 1654) provided by the base image.
 USER $APP_UID
 COPY --chown=$APP_UID:$APP_UID --from=build /app/publish .
