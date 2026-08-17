@@ -16,6 +16,11 @@
   --gold-light: #d4b85c;
   --gold-dark: #b39235;
   --gold-rgb: 201, 168, 76;
+  /* Accessible accent text (default GSSS palette; per-school values override
+     via the layout's inline :root). All >= 4.5:1 against their backgrounds. */
+  --gold-text: #CBAB51;
+  --gold-btn-text: #1B2A4A;
+  --gold-text-dark: #836D31;
 }
 
 /* ----- Reset & Base ----- */
@@ -62,7 +67,7 @@ a {
   text-decoration: none;
   transition: color 0.2s ease;
 }
-a:hover { color: var(--gold); }
+a:hover { color: var(--gold-text-dark); }
 
 /* ----- Spacing Scale ----- */
 .mt-1  { margin-top: 0.5rem; }
@@ -116,7 +121,7 @@ a:hover { color: var(--gold); }
 .btn-primary:hover {
   background-color: var(--gold);
   border-color: var(--gold);
-  color: #fff;
+  color: var(--gold-btn-text);
 }
 .btn-outline {
   background-color: transparent;
@@ -129,13 +134,13 @@ a:hover { color: var(--gold); }
 }
 .btn-gold {
   background-color: var(--gold);
-  color: #fff;
+  color: var(--gold-btn-text);
   border-color: var(--gold);
 }
 .btn-gold:hover {
   background-color: var(--gold-dark);
   border-color: var(--gold-dark);
-  color: #fff;
+  color: var(--gold-btn-text);
 }
 .btn-outline-light {
   background-color: transparent;
@@ -163,12 +168,42 @@ a:hover { color: var(--gold); }
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1.25rem;
   min-height: 64px;
   padding: 0 1.25rem;
   max-width: 1100px;
   margin: 0 auto;
+}
+
+/* Left header group: hamburger + portal-home button (before the logo). */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.portal-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+.portal-home:hover,
+.portal-home:focus-visible {
+  background: rgba(var(--gold-rgb), 0.25);
+  outline: none;
+}
+.portal-home-icon {
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
 .logo {
@@ -187,7 +222,14 @@ a:hover { color: var(--gold); }
   font-size: 1.4rem;
 }
 .logo span {
-  color: var(--gold);
+  color: var(--gold-text);
+}
+.logo-full,
+.logo-short {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .logo-short {
   display: none;
@@ -225,12 +267,12 @@ a:hover { color: var(--gold); }
 .main-nav a:hover,
 .main-nav a:focus-visible {
   background-color: rgba(var(--gold-rgb), 0.2);
-  color: var(--gold);
+  color: var(--gold-text);
   outline: none;
 }
 .main-nav a.active {
-  background-color: rgba(var(--gold-rgb), 0.25);
-  color: var(--gold);
+  background-color: rgba(var(--gold-rgb), 0.2);
+  color: var(--gold-text);
 }
 
 /* Hamburger button — hidden on desktop, visible on mobile/tablet */
@@ -287,7 +329,7 @@ a:hover { color: var(--gold); }
 }
 
 .footer-col h3 {
-  color: var(--gold);
+  color: var(--gold-text);
   font-size: 1.05rem;
   font-family: Georgia, "Times New Roman", Times, serif;
   margin-bottom: 0.85rem;
@@ -318,7 +360,7 @@ a:hover { color: var(--gold); }
   transition: color 0.2s ease;
 }
 .footer-col a:hover {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 
 /* Social icon links */
@@ -343,8 +385,8 @@ a:hover { color: var(--gold); }
   transition: border-color 0.25s, color 0.25s, background-color 0.25s;
 }
 .social-links a:hover {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--gold-text);
+  color: var(--gold-text);
   background-color: rgba(var(--gold-rgb), 0.1);
 }
 
@@ -369,7 +411,7 @@ a:hover { color: var(--gold); }
   color: #ccc;
 }
 .hours-list .time {
-  color: var(--gold);
+  color: var(--gold-text);
   font-weight: 500;
 }
 
@@ -379,7 +421,7 @@ a:hover { color: var(--gold); }
   padding: 1.25rem 0;
   text-align: center;
   font-size: 0.8rem;
-  color: #777;
+  color: #bbb;
 }
 .footer-bottom p {
   margin: 0;
@@ -405,7 +447,7 @@ a:hover { color: var(--gold); }
   font-size: 1.2rem;
   max-width: 650px;
   margin: 1rem auto 2rem;
-  opacity: 0.9;
+  opacity: 1;
 }
 
 /* Page banner (inner pages) */
@@ -435,7 +477,7 @@ a:hover { color: var(--gold); }
 }
 .sidebar h3 {
   font-size: 1.15rem;
-  color: var(--gold);
+  color: var(--gold-text-dark);
   margin-bottom: 0.75rem;
 }
 .sidebar ul {
@@ -466,7 +508,7 @@ a:hover { color: var(--gold); }
   height: 100px;
   border-radius: 50%;
   background: var(--navy);
-  color: var(--gold);
+  color: var(--gold-text);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -479,7 +521,7 @@ a:hover { color: var(--gold); }
   margin-bottom: 0.15rem;
 }
 .staff-card .role {
-  color: var(--gold);
+  color: var(--gold-text-dark);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -522,7 +564,7 @@ a:hover { color: var(--gold); }
 .form-message--success {
   display: block;
   background: #eafaf1;
-  color: #1e8449;
+  color: #145a32;
   border: 1px solid #a3d9b1;
 }
 .form-message--error {
@@ -565,7 +607,7 @@ a:hover { color: var(--gold); }
 .event-date .day {
   font-size: 1.4rem;
   line-height: 1;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .event-date .month {
   font-size: 0.75rem;
@@ -614,7 +656,7 @@ a:hover { color: var(--gold); }
   align-items: center;
   justify-content: center;
   min-height: 260px;
-  color: #888;
+  color: #555;
   font-size: 0.85rem;
   text-align: center;
   padding: 1.5rem;
@@ -687,7 +729,7 @@ a:hover { color: var(--gold); }
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: #555;
   font-size: 0.8rem;
 }
 .news-card .news-body {
@@ -695,7 +737,7 @@ a:hover { color: var(--gold); }
 }
 .news-card .news-date {
   font-size: 0.78rem;
-  color: var(--gold);
+  color: var(--gold-text-dark);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -726,7 +768,7 @@ a:hover { color: var(--gold); }
   font-size: 1.1rem;
   max-width: 550px;
   margin: 0 auto 1.75rem;
-  opacity: 0.85;
+  opacity: 1;
 }
 .cta-band .btn {
   margin: 0 0.4rem;
@@ -779,7 +821,7 @@ a:hover { color: var(--gold); }
   height: 80px;
   border-radius: 50%;
   background: var(--navy);
-  color: var(--gold);
+  color: var(--gold-text);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -795,7 +837,7 @@ a:hover { color: var(--gold); }
 }
 .leader-card .role {
   font-size: 0.85rem;
-  color: var(--gold);
+  color: var(--gold-text-dark);
   font-weight: 600;
 }
 
@@ -852,7 +894,7 @@ a:hover { color: var(--gold); }
   height: 44px;
   border-radius: 50%;
   background: var(--navy);
-  color: var(--gold);
+  color: var(--gold-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -895,7 +937,7 @@ a:hover { color: var(--gold); }
 .faq-item summary::after {
   content: "+";
   font-size: 1.3rem;
-  color: var(--gold);
+  color: var(--gold-text-dark);
   font-weight: 700;
   transition: transform 0.2s;
   flex-shrink: 0;
@@ -921,7 +963,7 @@ a:hover { color: var(--gold); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: #555;
   font-size: 0.85rem;
   text-align: center;
   padding: 2rem;
@@ -1001,8 +1043,8 @@ table.cal-table {
 }
 .tag-holiday { background: #fdecea; color: #c0392b; }
 .tag-academic { background: #e8f0fe; color: var(--navy); }
-.tag-event   { background: #fef9e7; color: var(--gold-dark); }
-.tag-exam     { background: #eafaf1; color: #1e8449; }
+.tag-event   { background: #fef9e7; color: var(--gold-text-dark); }
+.tag-exam     { background: #eafaf1; color: #145a32; }
 
 /* ---- Staff Photo Placeholder ---- */
 .staff-photo {
@@ -1010,7 +1052,7 @@ table.cal-table {
   height: 100px;
   border-radius: 50%;
   background: var(--navy);
-  color: var(--gold);
+  color: var(--gold-text);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1048,7 +1090,7 @@ table.cal-table {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--gold);
+  color: var(--gold-text-dark);
   font-weight: 700;
   margin-bottom: 0.4rem;
 }
@@ -1181,9 +1223,14 @@ table.cal-table {
 @media (max-width: 768px) {
   .header-inner {
     min-height: 56px;
+    position: relative;
   }
 
   .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100% - 160px);
     font-size: 1.25rem;
     flex-shrink: 1;
     min-width: 0;
@@ -1473,7 +1520,7 @@ table.cal-table {
   color: #444;
 }
 .portal-card .portal-loc {
-  color: var(--gold-dark);
+  color: var(--gold-text-dark);
   font-weight: 600;
 }
 .portal-card-emoji {
