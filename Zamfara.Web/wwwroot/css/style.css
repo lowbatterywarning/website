@@ -806,6 +806,11 @@ a:hover { color: var(--gold-text-dark); }
   .featured-news {
     grid-template-columns: 1fr;
   }
+  .featured-news-img img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
   .featured-news-body {
     padding: 0 1.25rem 1.25rem;
   }
