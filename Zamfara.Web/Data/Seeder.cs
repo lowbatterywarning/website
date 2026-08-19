@@ -11,17 +11,20 @@ namespace Zamfara.Web.Data;
 /// </summary>
 public static class Seeder
 {
-    // Canonical contact details for the single school, re-applied on every
-    // startup so deployed databases stay in sync with the code.
+    // Canonical identity and contact details for the single school, re-applied
+    // on every startup so deployed databases stay in sync with the code.
+    private const string GsssShortName = "GSSS, Gusau";
     private const string GsssAddress = "P.M.B. 1017, Gada Biyu, Sokoto Road, Gusau 632101, Zamfara";
     private const string GsssPhone = "(905) 421 7903";
     private const string GsssEmail = "qelesh@gmail.com";
 
     public static void Seed(ZamfaraDbContext db)
     {
-        // Existing database: keep the single school's contact details in sync.
+        // Existing database: keep the single school's identity and contact
+        // details in sync.
         if (db.Schools.FirstOrDefault(s => s.Slug == "gsss") is { } gsssRow)
         {
+            gsssRow.ShortName = GsssShortName;
             gsssRow.Address = GsssAddress;
             gsssRow.Phone = GsssPhone;
             gsssRow.Email = GsssEmail;
@@ -38,7 +41,7 @@ public static class Seeder
         {
             Slug = "gsss",
             Name = "Government Science Secondary School, Gusau",
-            ShortName = "GSSS Gusau",
+            ShortName = GsssShortName,
             Tagline = "Where curious minds grow, character takes root, and every student is known, challenged, and supported.",
             Established = "1969",
             Location = "Gusau, Zamfara State, Nigeria",

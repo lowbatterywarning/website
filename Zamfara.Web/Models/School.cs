@@ -16,7 +16,7 @@ public sealed class School
     /// <summary>Full display name, e.g. "Government Science Secondary School, Gusau".</summary>
     public string Name { get; set; } = "";
 
-    /// <summary>Compact name for narrow screens, e.g. "GSSS Gusau".</summary>
+    /// <summary>Compact name for narrow screens, e.g. "GSSS, Gusau".</summary>
     public string ShortName { get; set; } = "";
 
     /// <summary>Hero tagline shown on the home page.</summary>
