@@ -47,6 +47,8 @@ public sealed class HomeController : Controller
         return View(new NewsViewModel(Meta(nameof(News), school), school, news));
     }
 
+    public IActionResult Gsttp() => TemplatePage(nameof(Gsttp));
+
     public IActionResult Staff() => TemplatePage(nameof(Staff));
 
     public IActionResult Calendar()

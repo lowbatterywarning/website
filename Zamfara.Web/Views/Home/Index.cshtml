@@ -80,6 +80,18 @@
       <h2 style="text-align:center;">News &amp; Announcements</h2>
       <p style="text-align:center; max-width:600px; margin:0 auto 2.5rem;">Stay connected with the latest happenings around campus.</p>
 
+      <!-- Featured story: GSTTP training programme -->
+      <a class="featured-news mb-4" asp-action="Gsttp">
+        <div class="featured-news-img" role="img" aria-label="Global Standard Teacher Transformation Programme participants">
+          <img src="~/images/news/gsttp-1.jpg" alt="Global Standard Teacher Transformation Programme participants at ZACAS, Gusau" loading="lazy">
+        </div>
+        <div class="featured-news-body">
+          <p class="news-date">August 10, 2026 &mdash; Featured</p>
+          <h3>Zamfara Commences 18-Day Global Standard Teacher Transformation Programme for 250 Education Personnel</h3>
+          <p>Read the full story of the GSTTP capacity-building programme for teachers, evaluators, and administrators across Zamfara State &raquo;</p>
+        </div>
+      </a>
+
       <div class="news-grid">
         @foreach (var n in Model.News)
         {

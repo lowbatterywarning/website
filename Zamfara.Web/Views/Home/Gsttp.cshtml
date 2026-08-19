@@ -1,0 +1,88 @@
+@model PageModel
+
+@{
+    var school = Model.School;
+}
+
+<main>
+
+  <!-- ==================== PAGE BANNER ==================== -->
+  <section class="page-banner">
+    <div class="container">
+      <h1>News</h1>
+      <p class="page-banner-sub">@school.Name &mdash; latest update</p>
+    </div>
+  </section>
+
+  <!-- ==================== ARTICLE ==================== -->
+  <section class="section">
+    <div class="container article">
+
+      <p class="news-date">August 10, 2026</p>
+      <h2 style="margin-bottom:1rem;">Zamfara Commences 18-Day Global Standard Teacher Transformation Programme for 250 Education Personnel</h2>
+
+      <figure class="article-figure">
+        <img src="~/images/news/gsttp-1.jpg" alt="Participants during the opening session of the Global Standard Teacher Transformation Programme at ZACAS, Gusau" loading="lazy">
+      </figure>
+
+      <p>
+        The Zamfara State Ministry of Education, Science and Technology has commenced an 18-day capacity-building programme for 250 teachers, Education Quality Assurance and Assessment (EQAA) evaluators, and education administrators under the Global Standard Teacher Transformation Programme (GSTTP).
+      </p>
+
+      <p>
+        The training commenced on Monday, 10 August 2026, at the Conference Hall of the Zamfara College of Arts and Science (ZACAS), Gusau, and will run through 29 August 2026.
+      </p>
+
+      <p>
+        Implemented in collaboration with Noble Hall Limited, the programme is designed to strengthen the professional competence, effectiveness and capacity of education personnel across Zamfara State. Participants are drawn from the state's 14 Local Government Areas, bringing together key personnel responsible for teaching, educational administration, assessment and quality assurance.
+      </p>
+
+      <p>
+        The programme focuses on contemporary knowledge, practical skills, modern teaching techniques and global best practices aimed at improving teaching quality, educational management and quality assurance across the state's schools.
+      </p>
+
+      <figure class="article-figure">
+        <img src="~/images/news/gsttp-2.jpg" alt="A session in progress at the Global Standard Teacher Transformation Programme" loading="lazy">
+      </figure>
+
+      <p>
+        Speaking on the significance of the initiative, the Honourable Commissioner for Education, Science and Technology, Mal. Abdulmalik Abubakar Gajam, reaffirmed the Ministry's commitment to continuous professional development as a central component of the state's education transformation agenda.
+      </p>
+
+      <blockquote class="article-quote">
+        &ldquo;No education system can rise above the quality of its teachers and administrators. Therefore, investing in continuous professional development remains central to our efforts to transform education in Zamfara State.&rdquo;
+      </blockquote>
+
+      <p>
+        The Commissioner noted that the Ministry is determined to build an education system in which teachers are empowered, evaluators are effective, administrators are equipped with the skills required to perform their responsibilities, and children receive the quality education they deserve.
+      </p>
+
+      <p>
+        The GSTTP forms part of the Ministry's broader response to the challenges facing the education sector and its efforts to strengthen the human capacity required for sustainable improvement in education delivery.
+      </p>
+
+      <p>
+        Throughout the programme, the Ministry will document the training activities, engagements, lessons and milestones as part of its commitment to transparent public-sector communication and maintaining a clear record of progress in the education transformation agenda.
+      </p>
+
+      <figure class="article-figure">
+        <img src="~/images/news/gsttp-3.jpg" alt="Education personnel in attendance at the Global Standard Teacher Transformation Programme, ZACAS, Gusau" loading="lazy">
+      </figure>
+
+      <p>
+        The 18-day training will continue at ZACAS, Gusau, until 29 August 2026, with participants expected to apply the knowledge and skills acquired to strengthen teaching, educational administration, assessment and quality assurance across Zamfara State.
+      </p>
+
+      <p>
+        Through initiatives such as the GSTTP, the Zamfara State Ministry of Education, Science and Technology continues to emphasise that investing in education personnel is an investment in the future of the state's children and the long-term development of Zamfara State.
+      </p>
+
+      <p class="mt-4">
+        <a asp-action="News" class="btn btn-outline">&larr; Back to News</a>
+      </p>
+
+    </div>
+  </section>
+
+
+</main>

@@ -212,6 +212,7 @@ app.MapControllerRoute(name: "about", pattern: "about", defaults: new { controll
 app.MapControllerRoute(name: "academics", pattern: "academics", defaults: new { controller = "Home", action = "Academics" });
 app.MapControllerRoute(name: "admissions", pattern: "admissions", defaults: new { controller = "Home", action = "Admissions" });
 app.MapControllerRoute(name: "news", pattern: "news", defaults: new { controller = "Home", action = "News" });
+app.MapControllerRoute(name: "gsttp-news", pattern: "news/gsttp", defaults: new { controller = "Home", action = "Gsttp" });
 app.MapControllerRoute(name: "staff", pattern: "staff", defaults: new { controller = "Home", action = "Staff" });
 app.MapControllerRoute(name: "calendar", pattern: "calendar", defaults: new { controller = "Home", action = "Calendar" });
 app.MapControllerRoute(name: "gallery", pattern: "gallery", defaults: new { controller = "Home", action = "Gallery" });
