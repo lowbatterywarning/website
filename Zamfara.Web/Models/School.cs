@@ -27,7 +27,7 @@ public sealed class School
     /// <summary>e.g. "Gusau, Zamfara State, Nigeria".</summary>
     public string Location { get; set; } = "";
 
-    /// <summary>Local Government Area, used by the portal directory search.</summary>
+    /// <summary>Local Government Area.</summary>
     public string Lga { get; set; } = "";
 
     public string Address { get; set; } = "";

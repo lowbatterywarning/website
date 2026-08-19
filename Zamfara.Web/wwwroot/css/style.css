@@ -176,34 +176,12 @@ a:hover { color: var(--gold-text-dark); }
   margin: 0 auto;
 }
 
-/* Left header group: hamburger + portal-home button (before the logo). */
+/* Left header group: hamburger (before the logo). */
 .header-left {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
-}
-.portal-home {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-  flex-shrink: 0;
-}
-.portal-home:hover,
-.portal-home:focus-visible {
-  background: rgba(var(--gold-rgb), 0.25);
-  outline: none;
-}
-.portal-home-icon {
-  font-size: 1.3rem;
-  line-height: 1;
 }
 
 .logo {
@@ -1422,7 +1400,7 @@ table.cal-table {
 }
 
 /* ============================================================
-   Gallery & Portal Directory
+   Gallery
    ============================================================ */
 
 .visually-hidden {
@@ -1465,84 +1443,4 @@ table.cal-table {
 }
 .gallery-item figcaption strong {
   color: var(--navy);
-}
-
-/* ---- Portal directory (zamfara.org) ---- */
-.portal-hero {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-  color: #fff;
-  text-align: center;
-  padding: 4rem 0 3rem;
-}
-.portal-hero h1 {
-  font-size: 2.4rem;
-  margin-bottom: 1rem;
-}
-.portal-hero p {
-  max-width: 640px;
-  margin: 0 auto 1.75rem;
-}
-.portal-hero input {
-  width: 100%;
-  max-width: 480px;
-  padding: 0.85rem 1.25rem;
-  font-size: 1.05rem;
-  border: none;
-  border-radius: 999px;
-  outline: none;
-}
-.portal-hero input:focus {
-  box-shadow: 0 0 0 3px var(--gold);
-}
-.portal-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-.portal-card {
-  background: #fff;
-  border: 1px solid #e9e9e9;
-  border-radius: 10px;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-}
-.portal-card h3 {
-  margin: 0;
-  color: var(--navy);
-  font-size: 1.1rem;
-}
-.portal-card p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #444;
-}
-.portal-card .portal-loc {
-  color: var(--gold-text-dark);
-  font-weight: 600;
-}
-.portal-card-emoji {
-  font-size: 2.2rem;
-}
-.portal-card .btn {
-  margin-top: 0.75rem;
-  align-self: flex-start;
-}
-.portal-footer {
-  background: var(--navy);
-  color: #fff;
-  padding: 1.5rem 0;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-@media (max-width: 480px) {
-  .portal-hero {
-    padding: 2.5rem 0 2rem;
-  }
-  .portal-hero h1 {
-    font-size: 1.7rem;
-  }
 }

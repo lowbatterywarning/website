@@ -96,8 +96,9 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Stamp every request as belonging to a school sub-site (Host:
-// {slug}.zamfara.org) or to the portal directory (apex/unknown host).
+// Stamp every request with its resolved school. Single-school mode: the apex
+// domain (zamfara.org) is the site; www is redirected to it and any other
+// host gets a 404.
 app.UseMiddleware<TenantMiddleware>();
 
 // Honor X-Forwarded-Proto only when a TLS-terminating reverse proxy is
@@ -203,8 +204,9 @@ app.UseStaticFiles(new StaticFileOptions
 });
 app.UseRouting();
 
-// Literal route table: the eight template pages plus the error handler.
-// Anything else (e.g. /Home/About) falls through to 404.
+// Literal route table: the eight template pages plus the error handler. Any
+// other path on an owned host falls through to the catch-all and gets a
+// friendly 404 view with a link back home.
 app.MapControllerRoute(name: "home", pattern: "", defaults: new { controller = "Home", action = "Index" });
 app.MapControllerRoute(name: "about", pattern: "about", defaults: new { controller = "Home", action = "About" });
 app.MapControllerRoute(name: "academics", pattern: "academics", defaults: new { controller = "Home", action = "Academics" });
@@ -215,6 +217,7 @@ app.MapControllerRoute(name: "calendar", pattern: "calendar", defaults: new { co
 app.MapControllerRoute(name: "gallery", pattern: "gallery", defaults: new { controller = "Home", action = "Gallery" });
 app.MapControllerRoute(name: "faq", pattern: "faq", defaults: new { controller = "Home", action = "Faq" });
 app.MapControllerRoute(name: "error", pattern: "Home/Error", defaults: new { controller = "Home", action = "Error" });
+app.MapControllerRoute(name: "notfound", pattern: "{*path}", defaults: new { controller = "Home", action = "NotFoundPage" });
 
 app.Run();
 
