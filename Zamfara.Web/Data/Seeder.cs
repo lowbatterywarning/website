@@ -3,16 +3,32 @@ using Zamfara.Web.Models;
 namespace Zamfara.Web.Data;
 
 /// <summary>
-/// Idempotent seed: runs at startup and only inserts when the Schools table
-/// is empty. GSSS Gusau carries the site's real content; demo-one/demo-two
-/// are placeholder tenants so the multi-tenant plumbing can be exercised end
-/// to end (their content will be replaced by the onboarding import later).
-/// Contact details are placeholders until real ones are supplied.
+/// Idempotent seed: runs at startup. On an empty database it inserts the
+/// three seed tenants; on an existing database it refreshes the single
+/// school's (GSSS) contact details so a redeploy picks up content changes.
+/// demo-one/demo-two are placeholder tenants so the multi-tenant plumbing
+/// can be exercised end to end.
 /// </summary>
 public static class Seeder
 {
+    // Canonical contact details for the single school, re-applied on every
+    // startup so deployed databases stay in sync with the code.
+    private const string GsssAddress = "P.M.B. 1017, Gada Biyu, Sokoto Road, Gusau 632101, Zamfara";
+    private const string GsssPhone = "(905) 421 7903";
+    private const string GsssEmail = "qelesh@gmail.com";
+
     public static void Seed(ZamfaraDbContext db)
     {
+        // Existing database: keep the single school's contact details in sync.
+        if (db.Schools.FirstOrDefault(s => s.Slug == "gsss") is { } gsssRow)
+        {
+            gsssRow.Address = GsssAddress;
+            gsssRow.Phone = GsssPhone;
+            gsssRow.Email = GsssEmail;
+            db.SaveChanges();
+            return;
+        }
+
         if (db.Schools.Any())
         {
             return;
@@ -27,9 +43,9 @@ public static class Seeder
             Established = "1969",
             Location = "Gusau, Zamfara State, Nigeria",
             Lga = "Gusau",
-            Address = "Gusau, Zamfara State, Nigeria",
-            Phone = "(555) 123-4567",
-            Email = "info@school.edu",
+            Address = GsssAddress,
+            Phone = GsssPhone,
+            Email = GsssEmail,
             PrimaryColor = "#1B2A4A",
             AccentColor = "#C9A84C",
             LogoEmoji = "🎓",
