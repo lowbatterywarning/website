@@ -8,11 +8,10 @@ namespace Zamfara.Web.Infrastructure;
 
 /// <summary>
 /// Resolves which school (tenant) a request belongs to, from the request Host
-/// header. In single-school mode only the apex domain (zamfara.org) and the
-/// loopback host are owned, so the whole site is the default school. Every
-/// other host resolves to null (404). The Schools table is tiny (a few
-/// hundred bytes per row), so it is loaded once and cached for the process
-/// lifetime.
+/// header: the first label of *.zamfara.org is the school slug. The whole
+/// Schools table is tiny (a few hundred rows of a few hundred bytes each), so
+/// it is loaded once and cached for the process lifetime. Phase 2 (the CMS)
+/// will invalidate this cache when school data is edited.
 /// </summary>
 public sealed class TenantResolver
 {
@@ -30,19 +29,16 @@ public sealed class TenantResolver
     }
 
     /// <summary>
-    /// Resolves the school for a request, or null when the request is unowned
-    /// and should be answered with a 404. Owned hosts are the apex domain
-    /// (zamfara.org, the single school site) and the loopback address used for
-    /// local development and health checks.
+    /// Resolves the school for a request, or null when the request should show
+    /// the portal directory (apex domain, unknown host, or unknown slug).
     /// </summary>
     public School? Resolve(string host, string? schoolOverride)
     {
         EnsureLoaded();
 
-        // Dev/convenience override: /?school=slug previews that school. Only
-        // honored on the loopback host so the live site can never be switched
-        // away from the single school.
-        if (!string.IsNullOrEmpty(schoolOverride) && IsLoopback(host))
+        // Dev/convenience override: /?school=slug shows that school regardless of
+        // the Host header. Harmless: every site is public content.
+        if (!string.IsNullOrEmpty(schoolOverride))
         {
             var slug = schoolOverride.Trim().ToLowerInvariant();
             if (SlugPattern.IsMatch(slug) && _bySlug.TryGetValue(slug, out var overridden))
@@ -52,26 +48,37 @@ public sealed class TenantResolver
             return null;
         }
 
-        // Local development and loopback health checks get the default school.
-        if (IsLoopback(host))
+        // Local development and loopback health checks get the first school.
+        if (host.Equals("localhost", StringComparison.OrdinalIgnoreCase) || host.StartsWith("127.", StringComparison.OrdinalIgnoreCase))
         {
             return _defaultSchool;
         }
 
-        // Single-school mode: the apex domain is the site. www.zamfara.org is
-        // redirected to the apex by TenantMiddleware; every other host (school
-        // subdomains, unknown hosts, direct IPs) is unowned -> 404.
-        if (host.Equals("zamfara.org", StringComparison.OrdinalIgnoreCase))
+        // *.zamfara.org -> first label is the school slug.
+        const string domain = ".zamfara.org";
+        if (host.EndsWith(domain, StringComparison.OrdinalIgnoreCase))
         {
-            return _defaultSchool;
+            var slug = host[..^domain.Length];
+            if (slug.Equals("www", StringComparison.OrdinalIgnoreCase))
+            {
+                return null; // portal
+            }
+            if (SlugPattern.IsMatch(slug) && _bySlug.TryGetValue(slug, out var school))
+            {
+                return school;
+            }
         }
 
+        // Apex domain, unknown subdomains, and direct IP access all fall back to
+        // the portal directory, so unknown hosts never see an unowned site.
         return null;
     }
 
-    private static bool IsLoopback(string host) =>
-        host.Equals("localhost", StringComparison.OrdinalIgnoreCase)
-        || host.StartsWith("127.", StringComparison.OrdinalIgnoreCase);
+    public IReadOnlyList<School> AllSchools()
+    {
+        EnsureLoaded();
+        return _bySlug.Values.OrderBy(s => s.SortOrder).ToList();
+    }
 
     private void EnsureLoaded()
     {

@@ -7,6 +7,12 @@
     // tenant re-skins the same static CSS. Colors are validated #RRGGBB hex.
     var primary = BrandUtils.SafeHex(school.PrimaryColor, "#1B2A4A");
     var accent = BrandUtils.SafeHex(school.AccentColor, "#C9A84C");
+    // Portal-home URL mirrors HomeController.Portal(): absolute on the live
+    // portal domain, site root as a development fallback.
+    var host = Context.Request.Host.Host;
+    var liveDomain = host.EndsWith(".zamfara.org", StringComparison.OrdinalIgnoreCase)
+        || host.Equals("zamfara.org", StringComparison.OrdinalIgnoreCase);
+    var portalHome = liveDomain ? "https://zamfara.org" : "/";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -54,6 +60,9 @@
         <button class="hamburger" aria-label="Toggle navigation">
           <span></span><span></span><span></span>
         </button>
+        <a class="portal-home" href="@portalHome" title="Zamfara Portal — Home" aria-label="Go to Zamfara portal home">
+          <span class="portal-home-icon" aria-hidden="true">🌐</span>
+        </a>
       </div>
       <a asp-action="Index" class="logo" aria-label="@school.ShortName — Home">
         <span class="logo-icon">@school.LogoEmoji</span>

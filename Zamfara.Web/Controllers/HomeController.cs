@@ -7,21 +7,28 @@ using Zamfara.Web.Models;
 namespace Zamfara.Web.Controllers;
 
 /// <summary>
-/// Serves the single school site. Which school a request belongs to was
-/// resolved from the Host header by TenantMiddleware; unowned hosts are
-/// answered with a 404 by the middleware before this controller is reached.
+/// Serves every school sub-site. Which school a request belongs to was
+/// resolved from the Host header by TenantMiddleware; portal requests (apex
+/// zamfara.org) render the school directory instead.
 /// </summary>
 public sealed class HomeController : Controller
 {
     private readonly ZamfaraDbContext _db;
+    private readonly TenantResolver _resolver;
 
-    public HomeController(ZamfaraDbContext db)
+    public HomeController(ZamfaraDbContext db, TenantResolver resolver)
     {
         _db = db;
+        _resolver = resolver;
     }
 
     public IActionResult Index()
     {
+        if (HttpContext.IsPortal())
+        {
+            return Portal();
+        }
+
         var school = RequireSchool();
         var news = _db.NewsPosts.AsNoTracking()
             .Where(n => n.SchoolId == school.Id)
@@ -106,4 +113,19 @@ public sealed class HomeController : Controller
         HttpContext.GetSchool() ?? throw new InvalidOperationException("Tenant middleware did not resolve a school for this request.");
 
     private static PageMeta Meta(string page, School school) => SchoolPages.Get(page, school.Name);
+
+    private IActionResult Portal()
+    {
+        var host = Request.Host.Host;
+        var liveDomain = host.EndsWith(".zamfara.org", StringComparison.OrdinalIgnoreCase)
+            || host.Equals("zamfara.org", StringComparison.OrdinalIgnoreCase);
+        var schools = _resolver.AllSchools()
+            .Select(s => new PortalSchool(
+                s,
+                liveDomain
+                    ? $"https://{s.Slug}.zamfara.org"
+                    : $"/?school={s.Slug}"))
+            .ToList();
+        return View("Portal", new PortalViewModel(schools));
+    }
 }

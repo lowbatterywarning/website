@@ -96,9 +96,8 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Stamp every request with its resolved school. Single-school mode: the apex
-// domain (zamfara.org) is the site; www is redirected to it and any other
-// host gets a 404.
+// Stamp every request as belonging to a school sub-site (Host:
+// {slug}.zamfara.org) or to the portal directory (apex/unknown host).
 app.UseMiddleware<TenantMiddleware>();
 
 // Honor X-Forwarded-Proto only when a TLS-terminating reverse proxy is

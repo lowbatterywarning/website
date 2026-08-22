@@ -21,3 +21,8 @@ public sealed record GalleryViewModel(PageMeta Meta, School School, IReadOnlyLis
 
 public sealed record FaqViewModel(PageMeta Meta, School School, IReadOnlyList<FaqItem> Faqs)
     : PageModel(Meta, School);
+
+/// <summary>One school card in the portal directory.</summary>
+public sealed record PortalSchool(School School, string Url);
+
+public sealed record PortalViewModel(IReadOnlyList<PortalSchool> Schools);
