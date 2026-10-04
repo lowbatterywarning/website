@@ -1,21 +1,25 @@
-using System.Net;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using Zamfara.Web.Data;
 using Zamfara.Web.Infrastructure;
 
 // Resolve the project directory (where wwwroot lives) even when the app is
-// launched from elsewhere, e.g. `dotnet bin/Debug/net8.0/Zamfara.Web.dll`
+// launched from elsewhere, e.g. `dotnet bin/Debug/net10.0/Zamfara.Web.dll`
 // run from the repository root.
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args,
     ContentRootPath = ResolveContentRoot()
 });
+
+// Disable ASP.NET's automatic, unrestricted forwarded-header middleware even
+// if an old deployment still sets ASPNETCORE_FORWARDEDHEADERS_ENABLED.
+// Proxy handling below uses our own setting and an explicit trust list.
+builder.Configuration["ForwardedHeaders_Enabled"] = "false";
 
 // Don't advertise the server implementation.
 builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
@@ -29,11 +33,11 @@ builder.Services.AddControllersWithViews(options =>
 // app — ideal for the homelab server (no DB process, trivial backup by copying).
 // ZAMFARA_DB_PATH overrides the location; in Docker it points at the mounted
 // /app/App_Data volume so the DB survives recreation of a read-only container.
-var dbPath = builder.Configuration["ZAMFARA_DB_PATH"]
-    ?? Path.Combine(builder.Environment.ContentRootPath, "App_Data", "zamfara.db");
+var dbPath = DatabasePath.Resolve(builder.Configuration["ZAMFARA_DB_PATH"],
+    builder.Environment.ContentRootPath);
 Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
 builder.Services.AddDbContext<ZamfaraDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
+    options.UseSqlite(new SqliteConnectionStringBuilder { DataSource = dbPath }.ToString()));
 
 // Singleton tenant resolver: caches the (tiny) Schools table for the process
 // lifetime and resolves the school slug from the request Host.
@@ -96,26 +100,17 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Stamp every request as belonging to a school sub-site (Host:
-// {slug}.zamfara.org) or to the portal directory (apex/unknown host).
-app.UseMiddleware<TenantMiddleware>();
-
 // Honor X-Forwarded-Proto only when a TLS-terminating reverse proxy is
 // explicitly enabled, and only from the loopback or Docker bridge networks.
 // When on, the proxy must be the only thing that can reach this port, otherwise
 // spoofed headers could defeat the HTTPS redirect below.
-if (builder.Configuration.GetValue<bool>("ASPNETCORE_FORWARDEDHEADERS_ENABLED"))
+if (builder.Configuration.GetValue<bool>("ZAMFARA_FORWARDEDHEADERS_ENABLED"))
 {
-    app.UseForwardedHeaders(new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.XForwardedProto,
-        KnownNetworks =
-        {
-            new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Loopback, 8),
-            new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("172.16.0.0"), 12)
-        }
-    });
+    app.UseForwardedHeaders(ProxyHeaders.CreateOptions());
 }
+
+// Stamp requests after processing the trusted proxy's scheme.
+app.UseMiddleware<TenantMiddleware>();
 
 // No-detail health probe for Docker HEALTHCHECK / uptime monitors. Terminal
 // branch mapped before the production middleware so it stays reachable over
@@ -202,6 +197,7 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 app.UseRouting();
+app.MapControllers();
 
 // Literal route table: the eight template pages plus the error handler.
 // Anything else (e.g. /Home/About) falls through to 404.

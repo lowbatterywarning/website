@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
-# --- Build stage: restore + publish on the .NET 8 SDK image -----------------
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# --- Build stage: restore + publish on the .NET 10 SDK image -----------------
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 # Restore first so dependency downloads are cached across code-only changes.
 COPY Zamfara.Web/Zamfara.Web.csproj ./Zamfara.Web/
@@ -9,8 +9,8 @@ RUN dotnet restore Zamfara.Web/Zamfara.Web.csproj
 COPY Zamfara.Web/ ./Zamfara.Web/
 RUN dotnet publish Zamfara.Web/Zamfara.Web.csproj -c Release -o /app/publish --no-restore
 
-# --- Runtime stage: minimal ASP.NET Core 8 image, non-root, HTTP only ------
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+# --- Runtime stage: minimal ASP.NET Core 10 image, non-root, HTTP only ------
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 # Production env activates HSTS, HTTPS redirection and the error page. The
 # HTTPS port lets the redirection middleware build correct https:// URLs even

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Zamfara.Web.Data;
 using Zamfara.Web.Infrastructure;
@@ -20,6 +21,20 @@ public sealed class HomeController : Controller
     {
         _db = db;
         _resolver = resolver;
+    }
+
+    // School pages do not exist on portal hosts. Guard them before executing
+    // an action so every school route returns to the directory consistently.
+    public override void OnActionExecuting(ActionExecutingContext context)
+    {
+        if (HttpContext.IsPortal() &&
+            context.ActionDescriptor.RouteValues["action"] is not (nameof(Index) or nameof(Error)))
+        {
+            context.Result = RedirectToAction(nameof(Index));
+            return;
+        }
+
+        base.OnActionExecuting(context);
     }
 
     public IActionResult Index()

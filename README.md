@@ -1,156 +1,134 @@
-# Government Science Secondary School, Gusau — ASP.NET Core MVC
+# Zamfara school portal — ASP.NET Core MVC
 
-A port of the original static HTML school-template site into a single ASP.NET
-Core MVC project. It serves **one school site** at the site root for
-Government Science Secondary School, Gusau:
+An ASP.NET Core 10 MVC website with a school directory at `zamfara.org` and
+individual school sites at `{slug}.zamfara.org`. SQLite stores school branding,
+contact details, news, calendar events, gallery items, and FAQs. The initial
+seed includes Government Science Secondary School, Gusau (`gsss`) and two demo
+schools (`demo-one` and `demo-two`).
 
-| Route | Page |
+## Routes and tenants
+
+| Route | School page |
 | --- | --- |
 | `/` | Home |
 | `/about` | About |
 | `/academics` | Academics |
 | `/admissions` | Admissions |
+| `/news` | News |
 | `/staff` | Staff |
 | `/calendar` | Calendar |
-| `/contact` | Contact |
+| `/gallery` | Gallery |
+| `/faq` | FAQ |
 
-The school name is "Government Science Secondary School, Gusau" — rebrand by
-changing one constant in [`School.cs`](Zamfara.Web/Models/School.cs) (see
-[Rebranding the school](#rebranding-the-school)).
+On apex, `www`, and unknown school subdomains, `/` renders the directory.
+School-page routes on these portal hosts redirect to `/` with HTTP 302.
+Unknown routes return 404. The error action remains available to the production
+exception handler.
 
-## Prerequisites
+`localhost` and `127.*` resolve to the first seeded school. In Development,
+`?school=slug` selects another school and generated navigation links preserve
+that selection. In Production, a valid selection redirects to the school's
+canonical HTTPS subdomain, preserving the path and other query parameters.
+Invalid production selections are ignored and the hostname resolves normally.
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+Legacy `.html` and `/school-one|two|three` paths return permanent 301
+redirects. The retired contact page redirects to `/`; contact details are in
+the school footer.
 
-## Run
+## Build and run
 
-```bash
+Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+
+```powershell
+dotnet build Zamfara.sln -c Release
 cd Zamfara.Web
 dotnet run
 ```
 
-Then open <http://localhost:5000>. The app resolves its content root (`wwwroot`)
-automatically, so it also works when launched from the repository root or by
-running the built DLL directly:
+The development profile listens at `http://localhost:5000`. Startup creates
+`Zamfara.Web/App_Data/zamfara.db` if needed and seeds content only when the
+Schools table is empty. Set `ZAMFARA_DB_PATH` to override the database file. Relative filenames are
+resolved under the app's content root; a bare filename such as `school.db`
+is supported. Initial school and content inserts commit in one transaction.
+There are no schema migrations or content administration UI yet.
 
-```bash
-dotnet Zamfara.Web/bin/Debug/net8.0/Zamfara.Web.dll
+## Route regression check
+
+After building, run the smoke test from the repository root with PowerShell 7:
+
+```powershell
+dotnet run --project tests/Zamfara.RegressionTests -c Release --no-build
+./scripts/smoke-test.ps1
+./scripts/smoke-test.ps1 -Environment Development
+./scripts/smoke-test.ps1 -DisableProxy
 ```
+
+The console regression checks cover database filename resolution, a forced
+content-save failure followed by successful seed retry, seed idempotency, and
+trusted/untrusted proxy addresses.
+
+The smoke script starts the Release build on a temporary loopback port,
+uses a temporary SQLite database, then stops its process and removes its
+temporary data. It checks 149 requests in Production and 146 in Development,
+including portal redirects, school pages, legacy URLs, per-school sitemaps and
+robots files, query-selected navigation, rejected POST requests, and HTTPS
+redirection. `-DisableProxy` additionally verifies that the old ASP.NET proxy
+flag cannot enable unrestricted header handling. GitHub Actions runs all of
+these checks before publishing the container image.
+
+Sitemaps and robots files are generated per tenant. The portal sitemap lists
+its root; each school's sitemap lists its nine school pages on its canonical
+subdomain. Static sitemap/robots files in `legacy-static/` are only snapshots.
 
 ## Structure
 
 | Path | Purpose |
 | --- | --- |
-| `Zamfara.Web/Program.cs` | Pipeline, literal route table, legacy 301 rewrites |
-| `Zamfara.Web/Controllers/HomeController.cs` | One action per page + error page |
-| `Zamfara.Web/Models/School.cs` | School name constant (single rebrand point) |
-| `Zamfara.Web/Models/SchoolPages.cs` | Per-page head metadata (port of the original `<head>` sections) |
-| `Zamfara.Web/Views/Shared/_Layout.cshtml` | Ported school header/footer shell |
-| `Zamfara.Web/Views/Home/*.cshtml` | The 7 school pages |
-| `Zamfara.Web/wwwroot/` | CSS, JS, images, robots.txt, sitemap.xml |
-| `legacy-static/` | Untouched snapshot of the original static site |
+| `Zamfara.Web/Program.cs` | Startup, security headers, proxy settings, literal routes, legacy redirects |
+| `Zamfara.Web/Controllers/HomeController.cs` | Page actions and shared portal route guard |
+| `Zamfara.Web/Infrastructure/` | Tenant resolution and branding helpers |
+| `Zamfara.Web/Data/` | EF Core SQLite context and initial content seed |
+| `Zamfara.Web/Models/` | School/content entities and page view models |
+| `Zamfara.Web/Views/` | School pages, shared layout, and portal directory |
+| `Zamfara.Web/wwwroot/` | CSS, JavaScript, images, and search-engine files |
+| `legacy-static/` | Original static website snapshot |
 
-Legacy URLs redirect (301, case-insensitive, trailing slashes allowed):
-`index.html` → `/`, `about.html` → `/about`, `school-one` → `/`,
-`school-two/admissions` → `/admissions`, etc. Unknown legacy paths 404.
+To change initial school branding, edit `Data/Seeder.cs`. Changes to the seed
+will not update an existing database; existing records need to be updated
+separately. Phone numbers, email addresses, social links, and much of the
+school content are still placeholders.
 
-## Rebranding the school
+## Docker deployment
 
-Change `School.Name` in [`School.cs`](Zamfara.Web/Models/School.cs) — every
-page, title, meta tag and nav item picks the new name up automatically. It is
-currently set to "Government Science Secondary School, Gusau". (The original
-template literally used `[SCHOOL]` as the school name, so that was the default
-until the real name was set.)
-
-## Assumptions and known placeholders
-
-This is a structural port, not a redesign — the original design, CSS and
-markup are preserved. Items carried over from the original site that still
-need real values:
-
-- **Contact page is informational only** — there is no form and nothing
-  sends email yet; it shows contact details so visitors can reach the school
-  by phone, email, or in person.
-- **Contact details** are placeholders (`[Your City]`, `(555) 123-4567`,
-  `info@school.edu`, social `href="#"`).
-- **`[IMAGE: …]` comments** mark where real photos go; the referenced image
-  files were never present in the original site.
-- **Placeholder images** were generated (brand navy/gold) for
-  `favicon.ico`, `images/apple-touch-icon.png` and
-  `images/og-default.jpg` — replace with real artwork when available.
-- **Domain** is assumed to be `zamfara.org` in `robots.txt` and `sitemap.xml`.
-- **`js/main.js`** nav highlighting was patched to compare full URL paths so
-  it works under the MVC root-path structure.
-
-## Security hardening
-
-- **Allowed hosts**: `localhost`, loopback, `zamfara.org` and `*.zamfara.org`
-  only (in [`appsettings.json`](Zamfara.Web/appsettings.json)) — edit
-  `AllowedHosts` to add real domains. Override at runtime with the
-  `AllowedHosts` environment variable if needed.
-- **Security headers** on every response: `X-Content-Type-Options: nosniff`,
-  `X-Frame-Options: DENY`, a strict `Referrer-Policy`, a minimal
-  `Permissions-Policy`, and a `Content-Security-Policy` that only allows
-  self-hosted scripts/styles, `data:` favicons, and blocks framing, embedding,
-  and form submission entirely (matches the info-only site).
-- **No `Server` header** — Kestrel is configured not to advertise itself.
-- **GET/HEAD only** — every other HTTP verb (TRACE, PUT, POST, DELETE,
-  OPTIONS, …) gets an immediate `405 Method Not Allowed`; the site is purely
-  informational.
-- **Production only** (i.e. not in the `Development` environment): friendly
-  exception handler at `/Home/Error` (no exception details are ever rendered),
-  HSTS (365 days, subdomains included), and HTTPS redirection.
-- **`/healthz`** — no-detail health probe for uptime monitors and Docker
-  `HEALTHCHECK`; reachable over plain HTTP even in Production.
-- **CSRF**: `AutoValidateAntiforgeryToken` is applied globally so any future
-  form action is protected by default.
-- **Behind a reverse proxy** (nginx/Caddy/Traefik terminating TLS), set
-  `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` so the HTTPS redirection sees the
-  real scheme and does not redirect-loop. Only enable this when the app is not
-  directly reachable by the public, since it trusts `X-Forwarded-*` headers
-  from the connecting peer.
-
-## Build
-
-```bash
-dotnet build Zamfara.sln
+```powershell
+docker build -t zamfara-web .
 ```
 
-## Running with Docker
+The Dockerfile builds and runs on .NET 10. The runtime listens on port 8080,
+runs as the non-root `app` user, and probes `/healthz` over plain HTTP.
+The compose stack uses the published GHCR image and a Cloudflare Tunnel.
+Provide `TUNNEL_TOKEN` before running:
 
-```bash
-docker build -t zamfara-web .
-docker run -d -p 8080:8080 --name zamfara-web zamfara-web
-# or with the compose file (read-only root fs, no capabilities, non-root user):
+```powershell
 docker compose up -d
 ```
 
-Then open <http://localhost:8080> (through your TLS proxy in production). The
-container:
+SQLite persists in the `zamfara-data` volume at `/app/App_Data`. The app
+container has a read-only root filesystem, a `/tmp` tmpfs, no added Linux
+capabilities, and `no-new-privileges`. Back up the existing database volume
+before deploying an upgrade.
 
-- runs as the non-root `app` user (uid 1654);
-- listens on HTTP port 8080 only — terminate TLS at your reverse proxy or
-  load balancer and point it at 8080. The HTTPS port for redirects is assumed
-  to be 443 (`ASPNETCORE_HTTPS_PORT`) so plain-HTTP requests get a proper
-  `https://` redirect;
-- has a built-in `HEALTHCHECK` against `/healthz`;
-- stores its SQLite database in the `zamfara-data` volume (mounted at
-  `/app/App_Data`) so content survives container recreation and the
-  read-only root filesystem stays read-only. Override the location with the
-  `ZAMFARA_DB_PATH` environment variable if you use a bind mount instead;
-- sets `ASPNETCORE_ENVIRONMENT=Production`, so HSTS, HTTPS redirection and the
-  error page are active.
+## Security and proxy configuration
 
-Public-deployment notes:
-
-- `AllowedHosts` already includes `zamfara.org` and `*.zamfara.org`; if you
-  serve the site under other domains, pass `AllowedHosts: "your.domain;…"`
-  via the environment.
-- If (and only if) TLS is terminated by a proxy in front of the container,
-  enable `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` — the compose file already
-  does this. Without a proxy, leave it off so spoofed `X-Forwarded-*` headers
-  are ignored. When it is on, restrict direct access to the container port at
-  the firewall level so only your proxy can send it requests.
-- The compose file uses `read_only: true`, `no-new-privileges:true`,
-  `cap_drop: ALL`, and a `/tmp` tmpfs; keep these unless you have a concrete
-  reason to relax them.
+- `AllowedHosts` permits localhost, loopback, `zamfara.org`, and its subdomains.
+  Override it for additional deployment domains.
+- Only GET and HEAD are accepted. The app sends security headers and a Content
+  Security Policy; it has no form submission or email-sending functionality.
+- Production enables the generic exception handler, HSTS, and HTTPS redirection.
+- The compose stack enables `ZAMFARA_FORWARDEDHEADERS_ENABLED` for its
+  TLS-terminating proxy. The app trusts scheme headers only from loopback and
+  the Docker bridge range `172.16.0.0/12`. Other proxy networks require updating
+  `Infrastructure/ProxyHeaders.cs`. Keep the app inaccessible directly from
+  the public network. The old `ASPNETCORE_FORWARDEDHEADERS_ENABLED` automatic
+  middleware is explicitly disabled, even if a deployment still sets it.
+- `/healthz` returns a simple health response without requiring HTTPS.

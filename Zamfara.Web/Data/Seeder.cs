@@ -18,6 +18,10 @@ public static class Seeder
             return;
         }
 
+        // Both SaveChanges calls form one unit. A failed content insert must
+        // not leave schools behind and cause the next startup to skip seeding.
+        using var transaction = db.Database.BeginTransaction();
+
         var gsss = new School
         {
             Slug = "gsss",
@@ -114,5 +118,6 @@ public static class Seeder
         }
 
         db.SaveChanges();
+        transaction.Commit();
     }
 }

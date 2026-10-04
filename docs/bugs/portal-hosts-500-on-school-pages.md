@@ -1,6 +1,6 @@
 # Bug: portal hosts (apex and `www`) return HTTP 500 on every school page
 
-**Status:** open — reported for review
+**Status:** fixed — shared controller action guard redirects portal school-page requests to `/` (HTTP 302)
 **Found:** 2026-10-04, while deploying the site behind a Cloudflare Tunnel
 **Affects:** any host that resolves to the portal tenant — `zamfara.org`, `www.zamfara.org`
 **Not affected:** school subdomains (`gsss.zamfara.org`, `demo-one.zamfara.org`, …) — all nine pages return 200
@@ -76,3 +76,16 @@ plus the data-backed actions, or a middleware branch that rewrites portal school
 - `https://zamfara.org/` still renders the school directory.
 - School subdomains unchanged: all nine pages 200 on `gsss.zamfara.org`.
 - The legacy 301 rewrites still work on school subdomains.
+
+## Implemented fix and verification
+
+`HomeController.OnActionExecuting` checks the resolved portal flag before
+executing school actions and returns a redirect to the directory. `Index` and
+`Error` are exempt, preserving the directory and production error handler.
+Unknown paths still return 404 because they do not resolve to a controller action.
+Legacy redirects retain their existing HTTP 301 behavior.
+
+The solution builds on .NET 10 without warnings. `scripts/smoke-test.ps1` passes
+136 HTTP checks against Production using a temporary SQLite database, including
+all affected routes on apex, www, and unknown subdomains, school routes for all
+three seeded schools, and legacy redirects.
